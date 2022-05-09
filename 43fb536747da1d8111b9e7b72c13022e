@@ -1,0 +1,102 @@
+{
+  "url": "https://api.github.com/gists/43fb536747da1d8111b9e7b72c13022e",
+  "forks_url": "https://api.github.com/gists/43fb536747da1d8111b9e7b72c13022e/forks",
+  "commits_url": "https://api.github.com/gists/43fb536747da1d8111b9e7b72c13022e/commits",
+  "id": "43fb536747da1d8111b9e7b72c13022e",
+  "node_id": "G_kwDOBcuSaNoAIDQzZmI1MzY3NDdkYTFkODExMWI5ZTdiNzJjMTMwMjJl",
+  "git_pull_url": "https://gist.github.com/43fb536747da1d8111b9e7b72c13022e.git",
+  "git_push_url": "https://gist.github.com/43fb536747da1d8111b9e7b72c13022e.git",
+  "html_url": "https://gist.github.com/43fb536747da1d8111b9e7b72c13022e",
+  "files": {
+    "code.js": {
+      "filename": "code.js",
+      "type": "application/javascript",
+      "language": "JavaScript",
+      "raw_url": "https://gist.githubusercontent.com/jade-addin/43fb536747da1d8111b9e7b72c13022e/raw/d00450ced69ff6f07645047a1fe40170a1797cec/code.js",
+      "size": 8701,
+      "truncated": false,
+      "content": "const version=16\n//e7c158b8544aaacf2e2dce2a6acfcd52\n//Naive Bayes\nasync function auto_exec(){\n  // set the tool css\n ;console.log(\"===========================\",version,\"===========================\")\n  Jade.set_css(gist_files('style.css'),\"naive-bayes\")\n  // place the tool html \n  tag(\"tools-body\").innerHTML=gist_files('tool.html')\n  // fill in values from last tool use\n  jade_modules.jet_engine.restore_html_values()\n}\n\nfunction save_inputs(){\n  jade_modules.jet_engine.save_html_values([\"datasheet\",\"datarange\",\"trainingprecent\",\"predictors\",\"outcome\"])\n}\n\nasync function get_address(tag_name){\n  tag('datarange').value=await jade_modules.jet_engine.selected_range_address()\n}\n\nasync function split_data(){\n  // save the defaults for the tool\n  save_inputs()\n\n  Excel.run(async function(excel){\n    const sheet = excel.workbook.worksheets.getItem(tag(\"datasheet\").value)\n    const datarange = sheet.getRange(tag(\"datarange\").value)\n    //datarange.load('columnCount')\n    //sheet.activate()\n    await excel.sync()\n    datarange.getColumnsAfter(1).insert(Excel.InsertShiftDirection.right);\n    const next_col = datarange.getColumnsAfter(1)\n    next_col.load('values')\n    await excel.sync()\n    const train=[[\"Train\"]]\n    for(let x=1;x<next_col.values.length;x++){\n      if(Math.random()*100>parseFloat(tag(\"trainingprecent\").value)){\n        train.push([false])\n      }else{\n        train.push([true])\n      }\n    }\n    next_col.values=train\n    await excel.sync()\n  })\n\n\n}\n\nasync function train_model(){\n  // save the defaults for the tool\n\n  save_inputs()\n  Excel.run(async function(excel){\n    const sheet = excel.workbook.worksheets.getItem(tag(\"datasheet\").value)\n    const predictors = sheet.getRange(tag(\"predictors\").value)\n    const outcome = sheet.getRange(tag(\"outcome\").value)\n    const train = sheet.getRange(tag(\"datarange\").value).getColumnsAfter(1)\n    predictors.load('values')\n    outcome.load('values')\n    train.load('values')\n    sheet.activate()\n\n    let out_sheet = excel.workbook.worksheets.getItemOrNullObject(\"Naive Bayes Results\"); \n\n    await excel.sync()\n    if (out_sheet.isNullObject) {\n      // sheet does not exist yet\n      out_sheet=excel.workbook.worksheets.add(\"Naive Bayes Results\")\n    }else{\n      // clear the sheet\n      out_sheet.getUsedRange().delete(Excel.DeleteShiftDirection.up);\n    }\n    out_sheet.activate()\n    await excel.sync()\n\n    const counts = {};\n    for(let r=1;r<outcome.values.length;r++){\n      if(train.values[r][0]){\n        if(!counts[outcome.values[r][0]]){counts[outcome.values[r][0]]={}}\n        for(let c=0;c<predictors.values[0].length;c++){\n          if(counts[outcome.values[r][0]][predictors.values[r][c]]){\n            counts[outcome.values[r][0]][predictors.values[r][c]] += 1\n          }else{\n            counts[outcome.values[r][0]][predictors.values[r][c]] = 1\n          }\n        }\n      }\n    }\n\n   //console.log(\"sorted uniques\",counts)\n    let row=1\n    probabilities = {}\n    for(const [result,token_counts] of Object.entries(counts)){\n      probabilities[result] = {}\n      const data = []\n      data.push(['Token','Count','Probability'])\n      let sum=0\n\n      //sum the counts for all categories\n      for(const [token,count] of Object.entries(token_counts)){\n        sum += count + .01\n      }\n\n      for(const [token,count] of Object.entries(token_counts)){\n        data.push([token,count,(count+.01)/sum])\n        probabilities[result][token] = (count+.01)/sum\n      }\n     //console.log(\"data\",data)\n      out_sheet.getRangeByIndexes(row, 1, 1, 3).merge(true)\n      out_sheet.getRangeByIndexes(row, 1, 1, 1).values=`Probabilities: ${outcome.values[0][0]}=${result}`\n      out_sheet.getRangeByIndexes(row+1, 1, data.length, 3).values=data\n      jade_modules.jet_engine.border_around(out_sheet, out_sheet.getRangeByIndexes(row+1, 1, data.length, 3),\"Medium\",\"Continuous\",\"Black\")\n      jade_modules.jet_engine.range_format(out_sheet, out_sheet.getRangeByIndexes(row, 1,1,1), \"format/font/bold\",  true)\n      jade_modules.jet_engine.range_format(out_sheet, out_sheet.getRangeByIndexes(row, 1,1,1), \"format/font/italic\",  true)\n      jade_modules.jet_engine.range_format(out_sheet, out_sheet.getRangeByIndexes(row+1, 1, 1, 3), \"format/fill/color\",  \"Maroon\")\n      jade_modules.jet_engine.range_format(out_sheet, out_sheet.getRangeByIndexes(row+1, 1, 1, 3), \"format/font/color\",  \"White\")\n      jade_modules.jet_engine.range_format(out_sheet, out_sheet.getRangeByIndexes(row+1, 1, 1, 3), \"format/font/bold\",  true)\n      console.log(\"token_counts\",token_counts)\n      row += Object.keys(token_counts).length+3\n    }\n    out_sheet.getRangeByIndexes(1, 1, 1, 3).format.autofitColumns();\n    \n    // format of the confusion matrix\n    jade_modules.jet_engine.range_format(out_sheet, \"F3:H3\", \"format/fill/color\",  \"Maroon\")\n    jade_modules.jet_engine.range_format(out_sheet, \"F3:H3\", \"format/font/color\",  \"White\")\n    jade_modules.jet_engine.range_format(out_sheet, \"F3:H7\", \"format/font/bold\",  true)\n    jade_modules.jet_engine.range_format(out_sheet, \"G6:H7\", \"format/font/bold\",  false)\n    jade_modules.jet_engine.range_format(out_sheet, \"F4:H7\", \"format/horizontalAlignment\",  \"Center\")\n\n    jade_modules.jet_engine.border_around(out_sheet, \"F3:H7\",\"Medium\",\"Continuous\",\"Black\")\n    out_sheet.getRangeByIndexes(2,5,3,2).values = [\n      [\"Confusion Matrix\",null],\n      [null,\"Predicted\"],\n      [\"Actual\",null],\n    ]\n    out_sheet.getRangeByIndexes(2,5,1,3).merge(true)\n    out_sheet.getRangeByIndexes(3,6,1,2).merge(true)\n\n    \n\n    console.log(\"counts\",counts)\n    console.log(\"probabilities\",probabilities)\n    // calculating probabilities\n    \n    const predictions={}\n    for(let r=1;r<outcome.values.length;r++){\n\n      if(!train.values[r][0]){\n        // this is not a training value\n        let cum_prob=1\n        let pointer=predictions\n        for(const token of predictors.values[r]){\n          cum_prob = cum_prob * probabilities[outcome.values[r][0]][[token]]\n          if(!pointer[token]){pointer[token]={}}\n          pointer=pointer[token]\n        }\n        if(!pointer[outcome.values[r][0]]){\n          pointer[outcome.values[r][0]]={prob:cum_prob, count:0}\n        }\n        pointer[outcome.values[r][0]].count++\n      }\n    }\n\n    console.log(\"predictions\",predictions)\n\n    const confusion={}\n    for(const out of Object.keys(probabilities)){\n      confusion[out]={}\n      for(const out2 of Object.keys(probabilities)){\n        confusion[out][out2]=0\n      }\n    }\n\n    compute_confusion(predictions, confusion, counts)\n    console.log(\"confusion\",confusion)\n    const confusion_array=[]\n    const conf_col_head=[[]]\n    const conf_row_head=[]\n    for(const out of Object.keys(probabilities)){\n      conf_row_head.push([out])\n      conf_col_head[0].push(out)\n      const temp_array=[]\n      for(const out2 of Object.keys(probabilities)){\n        temp_array.push(confusion[out][out2])\n      }\n      confusion_array.push(temp_array)\n    }\n    \n    console.log(\"conf_col_head\",conf_col_head)\n    out_sheet.getRange(\"G5:H5\").values = conf_col_head\n    out_sheet.getRange(\"F6:F7\").values = conf_row_head\n    out_sheet.getRange(\"G6:H7\").values = confusion_array\n    excel.sync()\n  })\n}\n\nfunction compute_confusion(obj, confusion, counts){\n   let check_count=0\n  //  console.log(\"at comput confusion\")\n   for(const key of Object.keys(obj)){\n    //  console.log(key)\n    if(obj[key]){\n      // console.log(\"---------------obj[key]\",obj[key])\n      if(obj[key].count !== undefined){\n        // console.log(\"------------count incement check_count\")\n        check_count++\n      }\n      if(obj[key].prob !== undefined){\n        // console.log(\"prob incement check_count\")\n        check_count++\n      }\n    }\n   }\n   if(check_count===4){\n      // we have the final node\n      // console.log(\"---------------in check count = 4\")\n      let winner=Object.entries(obj)[0]\n      let loser=Object.entries(obj)[1]\n      // console.log(\"initial winner:\",winner)\n      // console.log(\"initial loser:\",loser)\n\n      if(loser[1].prob > winner[1].prob){\n        // console.log(\"in winner.loser flipper\")\n        winner=Object.entries(obj)[1]\n        loser=Object.entries(obj)[0]\n      }\n      //confusion[winner[0]][winner[0]] += winner[1][count]\n      // console.log(\"obj\",obj)\n      // console.log(\"winner\",winner)\n      // console.log(\"loser\",loser)\n      //confusion.prediction.actual\n      for(const outcome of Object.keys(counts)){\n        confusion[winner[0]][outcome] += obj[outcome].count \n      }\n   }else{\n    for(const key of Object.keys(obj)){ \n      compute_confusion(obj[key],confusion,counts)\n    }\n   }\n\n\n}\n\nfunction onlyUnique(value, index, self) {\n  return self.indexOf(value) === index;\n}"
+    },
+    "style.css": {
+      "filename": "style.css",
+      "type": "text/css",
+      "language": "CSS",
+      "raw_url": "https://gist.githubusercontent.com/jade-addin/43fb536747da1d8111b9e7b72c13022e/raw/7068cde4d17e9f6c8158b5bf818f296d7fefcaa1/style.css",
+      "size": 4,
+      "truncated": false,
+      "content": "/**/"
+    },
+    "tool.html": {
+      "filename": "tool.html",
+      "type": "text/html",
+      "language": "HTML",
+      "raw_url": "https://gist.githubusercontent.com/jade-addin/43fb536747da1d8111b9e7b72c13022e/raw/d38fb94652820fd6f4faf5567202b3db754a49ba/tool.html",
+      "size": 5028,
+      "truncated": false,
+      "content": "<!--  Laredo -->\n<div class=\"hidden\" id=\"jet-refresh\" style=\"margin-left: .5rem;\"><i title=\"Re-load this tool.\" onclick=\"jade_modules.jet_engine.select_page()\" class=\"fa-solid fa-arrows-rotate\"  cursor:pointer\"></i></div>    \n<div style=\"margin:1rem; text-align: center;\"><div style=\"display:inline-block; text-align: left;\">\n<table style=\"width:100%\" align=\"center\" cellspacing=\"0\" cellpadding=\"4\">\n    <tbody>\n        <tr>\n            <td onclick=\"jade_modules.jet_engine.toggle_next_row(this)\" colspan=\"2\" class=\"section\">&nbsp;1. Split Data Set</td>\n            <td class=\"section\"><i  title=\"Hide or show this step.\" onclick=\"jade_modules.jet_engine.toggle_table(this)\" class=\"fa-solid fa-chevron-up\"></i></td>\n        </tr>            \n        <tr class=\"hidden note\">\n            <td colspan=\"3\"> This step will add a columnn to your data set named \"Train\" with values of true or false based on the \"Training Set %\" you specify below.</td>\n        </tr>            \n        <tr>\n            <td onclick=\"jade_modules.jet_engine.toggle_next_row(this)\"  class=\"label\" >Data Sheet:</td>\n            <td><input size=\"6\" type=\"text\" id=\"datasheet\" onfocus=\"jade_modules.jet_engine.default_selected_sheet(this)\"/></td>\n            <td><i title=\"Get the name of the active sheet.\" onclick=\"jade_modules.jet_engine.get_sheet_name('datasheet')\" class=\"fa-solid fa-file\" style=\"color:#777; cursor:pointer\"></i></td>\n        </tr>            \n        <tr class=\"hidden note\">\n            <td colspan=\"3\">This is the name of the worksheet that has your data</td>\n        </tr>            \n        <tr>\n            <td onclick=\"jade_modules.jet_engine.toggle_next_row(this)\"  class=\"label\" >Data Range:</td>\n            <td><input size=\"6\" type=\"text\" id=\"datarange\" onfocus=\"jade_modules.jet_engine.default_selected_range(this)\"/></td>\n            <td><i title=\"Get the address of the selected range.\" onclick=\"jade_modules.jet_engine.get_multicell_address('datarange')\" class=\"fa-solid fa-table\" style=\"color:#777; cursor:pointer\"></i></td>\n        </tr>            \n        <tr class=\"hidden note\">\n            <td colspan=\"3\">This is a reference to your whole dataset, including a header row.</td>\n        </tr>            \n\n        <tr onclick=\"jade_modules.jet_engine.toggle_next_row(this)\" class=\"label\" >\n            <td  onclick=\"jade_modules.jet_engine.toggle_next_row(this)\" class=\"label\" >Training Set %:</td>\n            <td><input size=\"6\" type=\"text\" id=\"trainingprecent\" /></td>\n            <td></td>\n        </tr>            \n        <tr class=\"hidden note\">\n            <td colspan=\"3\">This is the percent of your data you want to use to train the model.  It is number like 30.</td>\n        </tr>            \n        <tr>\n            <td colspan=\"3\" align=\"right\"><button onclick=\"jade_modules.code.split_data()\">Split Data Set</button></td>\n        </tr>            \n    </tbody>\n</table>\n<div style=\"margin-top: 1rem;\" />\n<table  style=\"width:100%\" align=\"center\" cellspacing=\"0\" cellpadding=\"4\">\n    <tbody>\n        <tr>\n            <td onclick=\"jade_modules.jet_engine.toggle_next_row(this)\" colspan=\"2\" class=\"section\">&nbsp;2. Run the Model</td>\n            <td class=\"section\"><i  title=\"Hide or show this step.\" onclick=\"jade_modules.jet_engine.toggle_table(this)\" class=\"fa-solid fa-chevron-up\"></i></td>\n        </tr>            \n        <tr class=\"hidden note\">\n            <td colspan=\"3\">Calcualte token probabilities from the portion of the data set selcted for training in the prior step.</td>\n        </tr>            \n        <tr>\n            <td onclick=\"jade_modules.jet_engine.toggle_next_row(this)\"  class=\"label\" >Predictors:</td>\n            <td><input size=\"6\" type=\"text\" id=\"predictors\" onfocus=\"jade_modules.jet_engine.default_selected_range(this)\"/></td>\n            <td><i title=\"Get the data columns from the selected range.\" onclick=\"jade_modules.jet_engine.get_data_column_address('predictors')\" class=\"fa-solid fa-table\" style=\"color:#777; cursor:pointer\"></i></td>\n        </tr>            \n        <tr class=\"hidden note\">\n            <td colspan=\"3\">The range that holds the model input data (independent variables).</td>\n        </tr>            \n        <tr>\n            <td onclick=\"jade_modules.jet_engine.toggle_next_row(this)\"  class=\"label\" >Outcome:</td>\n            <td><input size=\"6\" type=\"text\" id=\"outcome\" onfocus=\"jade_modules.jet_engine.default_selected_range(this)\"/></td>\n            <td><i title=\"Get the data columns from the selecte range.\" onclick=\"jade_modules.jet_engine.get_data_column_address('outcome')\" class=\"fa-solid fa-table\" style=\"color:#777; cursor:pointer\"></i></td>\n        </tr>            \n        <tr class=\"hidden note\">\n            <td colspan=\"3\">The range that holds the model outcome data (dependent variable).</td>\n        </tr>            \n\n        <tr>\n            <td colspan=\"3\" align=\"right\"><button onclick=\"jade_modules.code.train_model()\">Run Model</button></td>\n        </tr>            \n    </tbody>\n</table>\n\n\n\n\n</div></div>"
+    }
+  },
+  "public": true,
+  "created_at": "2022-05-02T14:11:50Z",
+  "updated_at": "2022-05-02T17:58:23Z",
+  "description": "JET: Naive Bayes tool for the JADE Excel Add-in",
+  "comments": 0,
+  "user": null,
+  "comments_url": "https://api.github.com/gists/43fb536747da1d8111b9e7b72c13022e/comments",
+  "owner": {
+    "login": "jade-addin",
+    "id": 97227368,
+    "node_id": "U_kgDOBcuSaA",
+    "avatar_url": "https://avatars.githubusercontent.com/u/97227368?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/jade-addin",
+    "html_url": "https://github.com/jade-addin",
+    "followers_url": "https://api.github.com/users/jade-addin/followers",
+    "following_url": "https://api.github.com/users/jade-addin/following{/other_user}",
+    "gists_url": "https://api.github.com/users/jade-addin/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/jade-addin/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/jade-addin/subscriptions",
+    "organizations_url": "https://api.github.com/users/jade-addin/orgs",
+    "repos_url": "https://api.github.com/users/jade-addin/repos",
+    "events_url": "https://api.github.com/users/jade-addin/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/jade-addin/received_events",
+    "type": "User",
+    "site_admin": false
+  },
+  "forks": [
+
+  ],
+  "history": [
+    {
+      "user": {
+        "login": "theGove",
+        "id": 24496385,
+        "node_id": "MDQ6VXNlcjI0NDk2Mzg1",
+        "avatar_url": "https://avatars.githubusercontent.com/u/24496385?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/theGove",
+        "html_url": "https://github.com/theGove",
+        "followers_url": "https://api.github.com/users/theGove/followers",
+        "following_url": "https://api.github.com/users/theGove/following{/other_user}",
+        "gists_url": "https://api.github.com/users/theGove/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/theGove/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/theGove/subscriptions",
+        "organizations_url": "https://api.github.com/users/theGove/orgs",
+        "repos_url": "https://api.github.com/users/theGove/repos",
+        "events_url": "https://api.github.com/users/theGove/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/theGove/received_events",
+        "type": "User",
+        "site_admin": false
+      },
+      "version": "d23b79bcce777b504d1349e415a97c9833994973",
+      "committed_at": "2022-05-02T17:58:33Z",
+      "change_status": {
+        "total": 328,
+        "additions": 328,
+        "deletions": 0
+      },
+      "url": "https://api.github.com/gists/43fb536747da1d8111b9e7b72c13022e/d23b79bcce777b504d1349e415a97c9833994973"
+    }
+  ],
+  "truncated": false
+}

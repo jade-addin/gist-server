@@ -1,0 +1,102 @@
+{
+  "url": "https://api.github.com/gists/470a7e6842e743b6a3d5e656e0dc76fc",
+  "forks_url": "https://api.github.com/gists/470a7e6842e743b6a3d5e656e0dc76fc/forks",
+  "commits_url": "https://api.github.com/gists/470a7e6842e743b6a3d5e656e0dc76fc/commits",
+  "id": "470a7e6842e743b6a3d5e656e0dc76fc",
+  "node_id": "G_kwDOBcuSaNoAIDQ3MGE3ZTY4NDJlNzQzYjZhM2Q1ZTY1NmUwZGM3NmZj",
+  "git_pull_url": "https://gist.github.com/470a7e6842e743b6a3d5e656e0dc76fc.git",
+  "git_push_url": "https://gist.github.com/470a7e6842e743b6a3d5e656e0dc76fc.git",
+  "html_url": "https://gist.github.com/470a7e6842e743b6a3d5e656e0dc76fc",
+  "files": {
+    "code.js": {
+      "filename": "code.js",
+      "type": "application/javascript",
+      "language": "JavaScript",
+      "raw_url": "https://gist.githubusercontent.com/jade-addin/470a7e6842e743b6a3d5e656e0dc76fc/raw/cc1ee89e9a236a4adf0cf81fce1e6bb840fc7ccf/code.js",
+      "size": 4344,
+      "truncated": false,
+      "content": "//alpha vantage\nconst all_params=[\"symbol\",\"outputsize\",\"interval\",\"adjusted\"]\nconst params={\n  TIME_SERIES_DAILY:[\"symbol\",\"outputsize\",\"datatype\"],\n  TIME_SERIES_INTRADAY:[\"symbol\",\"outputsize\",\"interval\",\"datatype\",\"adjusted\"]\n}\n\n\nasync function auto_exec(){\n  // set the tool css\n  Jade.set_css(gist_files('style.css'),\"naive-bayes\")\n  // place the tool html \n  tag(\"tools-body\").innerHTML=gist_files('tool.html')\n  // fill in values from last tool use\n  await jade_modules.jet_engine.restore_html_values()\n  choose_function(tag(\"av-function\"))\n}\n\nfunction save_inputs(){\n  jade_modules.jet_engine.save_html_values([\"key\",\"av-function\",\"symbol\",\"sheet-name\",\"interval\",\"outputsize\",\"adjusted\"])\n\n}\n\n\n\nfunction av_credentials(){\n  window.open(\"https://www.alphavantage.co/support/#api-key\")\n}\n\nfunction choose_function(select){\n  console.log(\"at choose function\",select.value)\n  // show the correct parameters\n  for(const param of all_params){\n    if(tag(param+\"-entry\")){\n      jade.hide_element(param+\"-entry\")\n      jade.hide_element(param+\"-note\")\n    }\n  }\n\n  for(const param of params[select.value]){\n    \n    if(tag(param+\"-entry\")){\n      jade.show_element(param+\"-entry\")\n    }  \n  }\n}\n\nfunction place_data(params,data){\n  // put the data on a sheet based on what came back from alpha vantage\n  console.log(\"params\",params)\n  console.log(\"data\",data)\n  const values=data.split(\"\\r\\n\")\n  const header = values.shift().split(\",\")\n  header.push(\"symbol\")\n  const rows=[]\n  rows.push(header)\n  for(const row of values){\n    const data = row.split(\",\")\n    data.push(params.symbol)\n    rows.push(data)\n  }\n  rows.pop()\n  array_to_table(tag(\"sheet-name\").value,rows,1,1)\n\n}\nasync function import_data(){\n  save_inputs()  \n  \n  const parameters=[]\n  for(param of params[tag(\"av-function\").value]){\n    console.log(param)\n    parameters.push(`${param}=${tag(param).value}`)\n  }\n  console.log(parameters)\n  const url=`https://www.alphavantage.co/query?function=${tag(\"av-function\").value}&apikey=${tag(\"key\").value}&${parameters.join(\"&\")}`\n  console.log(url)\n  \n    jade.hide_element(\"api-error\")\n  \n    fetch_csv({\n      url:url, \n      on_success:place_data,\n      symbol:tag(\"symbol\").value\n    })\n\n    return  \n    if(response.status===400){\n      const data=await response.text()\n      tag(\"sql-error\").innerHTML=data\n      jade.show_element(\"sql-error\")\n      return\n    }\n\n    console.log(\"response\",response) \n    const data = await response.json()\n    \n    console.log(data) \n    \n    const columns=[]\n    const rows=[]\n    for(let x=0; x<data[0].fields.length; x++){\n      columns.push(data[0].fields[x].name)\n    }\n    rows.push(columns)\n    for(let x=1; x<data.length; x++){\n      const row=[]\n      for(const column of columns){\n        row.push(data[x][column])\n      }    \n      rows.push(row)\n    }\n    \n    //console.log(rows)\n}\n\nasync function array_to_table(sheet_name, range_data, start_row, start_col){\n  console.log(range_data)\n  await Excel.run(async function(excel){\n    if(sheet_name){\n      var sheet = excel.workbook.worksheets.getItemOrNullObject(sheet_name); \n    }else{\n      var sheet = excel.workbook.worksheets.add(); \n    }\n    await excel.sync()\n    \n    if (sheet.isNullObject) { \n      sheet = excel.workbook.worksheets.add(sheet_name)\n    }else{\n      sheet.getUsedRange().clear()\n    }\n    await excel.sync()\n    \n    sheet.activate()\n    console.log(start_row-1,start_col-1,range_data.length, range_data[0].length)\n    const range=sheet.getRangeByIndexes(start_row-1,start_col-1,range_data.length, range_data[0].length)\n    range.values=range_data\n    range.format.autofitColumns()\n    sheet.tables.add(range, true /*hasHeaders*/);\n    await excel.sync()\n  })\n  \n}\n\nfunction fetch_json(params){\n  if(!params.on_fail){params.on_fail=fetch_failed}\n  fetch(params.url)\n  .then((response) => response.json())\n  .then((data) => params.on_success(params,data))\n  .catch((error) => params.on_fail(params, error))\n}\n\nfunction fetch_csv(params){\n  if(!params.on_fail){params.on_fail=fetch_failed}\n  fetch(params.url)\n  .then((response) => response.text())\n  .then((data) => params.on_success(params,data))\n  .catch((error) => params.on_fail(params, error))\n}\n\n\nfunction fetch_failed(params, error){\n  console.log(\"params\", params)\n  console.log(\"failed to get url\", params.url)\n  console.log(\"error\", error)\n}"
+    },
+    "style.css": {
+      "filename": "style.css",
+      "type": "text/css",
+      "language": "CSS",
+      "raw_url": "https://gist.githubusercontent.com/jade-addin/470a7e6842e743b6a3d5e656e0dc76fc/raw/d39505d838fc2aa81179641f58cff33134f23c1f/style.css",
+      "size": 6,
+      "truncated": false,
+      "content": "\r\n/**/"
+    },
+    "tool.html": {
+      "filename": "tool.html",
+      "type": "text/html",
+      "language": "HTML",
+      "raw_url": "https://gist.githubusercontent.com/jade-addin/470a7e6842e743b6a3d5e656e0dc76fc/raw/d4bf4ece4daea5b3385195e87f88e23280244503/tool.html",
+      "size": 6451,
+      "truncated": false,
+      "content": "<div class=\"hidden\" id=\"jet-refresh\" style=\"margin-left: .5rem;\"><i title=\"Re-load this tool.\" onclick=\"jade_modules.jet_engine.select_page()\" class=\"fa-solid fa-arrows-rotate\"  cursor:pointer\"></i></div>    \n<div style=\"margin:1rem; text-align: center;\"><div style=\"display:inline-block; text-align: left;\">\n\n<table style=\"width:100%\" align=\"center\" cellspacing=\"0\" cellpadding=\"4\">\n    <tbody>\n        <tr>\n            <td onclick=\"jade_modules.jet_engine.toggle_next_row(this)\" colspan=\"2\" class=\"section head\">1. Configure Connection</td>\n            <td class=\"section drop\"><i  title=\"Hide or show this step.\" onclick=\"jade_modules.jet_engine.toggle_table(this)\" class=\"fa-solid fa-chevron-down\"></i></td>\n        </tr>            \n        <tr class=\"hidden note\">\n            <td colspan=\"3\">Here you will identify yourself to Alpha Vantage by supplying your API Key.</td>\n        </tr>            \n        <tr class=\"hidden\">\n            <td onclick=\"jade_modules.jet_engine.toggle_next_row(this)\"  class=\"label\" >API Key:</td>\n            <td><input size=\"6\" type=\"text\" id=\"key\"/></td>\n            <td><i title=\"Open alphavantage.com.\" onclick=\"jade_modules.code.av_credentials()\" class=\"fa-solid fa-globe\" style=\"color:#777; cursor:pointer\"></i></td>\n        </tr>            \n        <tr class=\"hidden note\">\n            <td colspan=\"3\">Open the <a href=\"https://www.alphavantage.co/support/#api-key\">\"Claim your API Key\"</a> page at Alpha Vantage. Complete the form to get you key and enter it here. </td>\n        </tr>            \n\n    </tbody>\n</table>\n<div style=\"margin-top: 1rem;\" />\n<table  style=\"width:100%\" align=\"center\" cellspacing=\"0\" cellpadding=\"4\">\n    <tbody>\n        <tr>\n            <td onclick=\"jade_modules.jet_engine.toggle_next_row(this)\" colspan=\"2\" class=\"section head\">2. Import Data</td>\n            <td class=\"section drop\"><i  title=\"Hide or show this step.\" onclick=\"jade_modules.jet_engine.toggle_table(this)\" class=\"fa-solid fa-chevron-up\"></i></td>\n        </tr>            \n        <tr class=\"hidden note\">\n            <td colspan=\"3\">Specify data desired and import.</td>\n        </tr>            \n        <tr>\n            <td onclick=\"jade_modules.jet_engine.toggle_next_row(this)\"  class=\"label\" >Data Sheet:</td>\n            <td><input size=\"6\" type=\"text\" id=\"sheet-name\" /></td>\n            <td><i title=\"Get the name of the active sheet.\" onclick=\"jade_modules.jet_engine.get_sheet_name('sheet-name')\" class=\"fa-solid fa-file\" style=\"color:#777; cursor:pointer\"></i></td>\n        </tr>            \n        <tr class=\"hidden note\">\n            <td colspan=\"3\">This is the name of the worksheet that you want to create when you import the data.  Be careful; all data will be erased from this sheet when the data are imported.  Leave this blank to create a sheet with an arbitrary name.</td>\n        </tr>            \n\n        <tr>\n            <td onclick=\"jade_modules.jet_engine.toggle_next_row(this)\"  class=\"label\" >Function:</td>\n            <td>\n                <select id=\"av-function\" onchange=\"jade_modules.code.choose_function(this)\">\n                    <option value=\"TIME_SERIES_DAILY\">Daliy</option>\n                    <option value=\"TIME_SERIES_INTRADAY\">Intraday</option>\n                </select>\n            </td>\n            <td></td>\n        </tr>            \n        <tr class=\"hidden note\">\n            <td colspan=\"3\">This is the function at Alpha Vantage that will produce the data you want.</td>\n        </tr>            \n        <tr id=\"symbol-entry\">\n            <td onclick=\"jade_modules.jet_engine.toggle_next_row(this)\"  class=\"label\" >Symbol:</td>\n            <td><input size=\"6\" type=\"text\" id=\"symbol\" value=\"IBM\"/></td>\n            <td></td>\n        </tr>            \n        <tr id=\"symbol-note\" class=\"hidden note\">\n            <td colspan=\"3\">The name of the equity of your choice. For example: IBM</td>\n        </tr>            \n\n        <tr id=\"interval-entry\" class=\"hidden\">\n            <td onclick=\"jade_modules.jet_engine.toggle_next_row(this)\"  class=\"label\" >Interval:</td>\n            <td>\n                <select id=\"interval\">\n                    <option value=\"1min\">1 minute</option>\n                    <option value=\"5min\">5 minutes</option>\n                    <option value=\"15min\">15 minutes</option>\n                    <option value=\"30min\">30 minutes</option>\n                    <option value=\"60min\" selected>60 minutes</option>\n                </select>\n            </td>\n            <td></td>\n        </tr>            \n        <tr id=\"interval-note\" class=\"hidden note\">\n            <td colspan=\"3\">Time interval between two consecutive data points in the time series.</td>\n        </tr>            \n\n        <tr id=\"adjusted-entry\" class=\"hidden\">\n            <td onclick=\"jade_modules.jet_engine.toggle_next_row(this)\"  class=\"label\" >Adjustment:</td>\n            <td>\n                <select id=\"adjusted\">\n                    <option value=\"true\">Adjusted</option>\n                    <option value=\"false\">None</option>\n                </select>\n            </td>\n            <td></td>\n        </tr>            \n        <tr id=\"adjusted-note\" class=\"hidden note\">\n            <td colspan=\"3\">\"Adjusted\" means the data to be returned have been adjusted by historic split and divident events. \"None\" means the data to be rerturned are raw, unadjusted values as traded.</td>\n        </tr>            \n\n        <tr id=\"outputsize-entry\">\n            <td onclick=\"jade_modules.jet_engine.toggle_next_row(this)\"  class=\"label\" >Size:</td>\n            <td>\n                <select id=\"outputsize\">\n                    <option value=\"compact\" selected>Compact</option>\n                    <option value=\"full\">Full</option>\n                </select>\n            </td>\n            <td></td>\n        </tr>            \n        <tr id=\"outputsize-note\" class=\"hidden note\">\n            <td colspan=\"3\">\"Compact\" returns a limited number of data points in the series; Full returns the all data available.</td>\n        </tr>            \n        <tr>\n            <td colspan=\"3\" align=\"right\"><button onclick=\"jade_modules.code.import_data()\">Import Data</button></td>\n        </tr>            \n        <tr>\n            <td id=\"api-error\" class=\"hidden\" colspan=\"3\" style=\"background-color: white; color:red ;\"></td>\n        </tr>            \n    </tbody>\n</table>\n\n\n\n\n</div></div>\n<form>\n    <input type=\"hidden\" id=\"datatype\" value=\"csv\">\n</form>"
+    }
+  },
+  "public": true,
+  "created_at": "2022-05-02T18:29:44Z",
+  "updated_at": "2022-05-09T23:46:15Z",
+  "description": "JET: Alpha Vantage Data Import",
+  "comments": 0,
+  "user": null,
+  "comments_url": "https://api.github.com/gists/470a7e6842e743b6a3d5e656e0dc76fc/comments",
+  "owner": {
+    "login": "jade-addin",
+    "id": 97227368,
+    "node_id": "U_kgDOBcuSaA",
+    "avatar_url": "https://avatars.githubusercontent.com/u/97227368?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/jade-addin",
+    "html_url": "https://github.com/jade-addin",
+    "followers_url": "https://api.github.com/users/jade-addin/followers",
+    "following_url": "https://api.github.com/users/jade-addin/following{/other_user}",
+    "gists_url": "https://api.github.com/users/jade-addin/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/jade-addin/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/jade-addin/subscriptions",
+    "organizations_url": "https://api.github.com/users/jade-addin/orgs",
+    "repos_url": "https://api.github.com/users/jade-addin/repos",
+    "events_url": "https://api.github.com/users/jade-addin/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/jade-addin/received_events",
+    "type": "User",
+    "site_admin": false
+  },
+  "forks": [
+
+  ],
+  "history": [
+    {
+      "user": {
+        "login": "theGove",
+        "id": 24496385,
+        "node_id": "MDQ6VXNlcjI0NDk2Mzg1",
+        "avatar_url": "https://avatars.githubusercontent.com/u/24496385?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/theGove",
+        "html_url": "https://github.com/theGove",
+        "followers_url": "https://api.github.com/users/theGove/followers",
+        "following_url": "https://api.github.com/users/theGove/following{/other_user}",
+        "gists_url": "https://api.github.com/users/theGove/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/theGove/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/theGove/subscriptions",
+        "organizations_url": "https://api.github.com/users/theGove/orgs",
+        "repos_url": "https://api.github.com/users/theGove/repos",
+        "events_url": "https://api.github.com/users/theGove/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/theGove/received_events",
+        "type": "User",
+        "site_admin": false
+      },
+      "version": "794e97a13f6f9929601abdf1e0f81fe542485834",
+      "committed_at": "2022-05-09T23:46:14Z",
+      "change_status": {
+        "total": 291,
+        "additions": 291,
+        "deletions": 0
+      },
+      "url": "https://api.github.com/gists/470a7e6842e743b6a3d5e656e0dc76fc/794e97a13f6f9929601abdf1e0f81fe542485834"
+    }
+  ],
+  "truncated": false
+}

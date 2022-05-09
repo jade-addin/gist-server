@@ -1,0 +1,102 @@
+{
+  "url": "https://api.github.com/gists/6ea1e7a39f57c481812c3943103acc4b",
+  "forks_url": "https://api.github.com/gists/6ea1e7a39f57c481812c3943103acc4b/forks",
+  "commits_url": "https://api.github.com/gists/6ea1e7a39f57c481812c3943103acc4b/commits",
+  "id": "6ea1e7a39f57c481812c3943103acc4b",
+  "node_id": "G_kwDOBcuSaNoAIDZlYTFlN2EzOWY1N2M0ODE4MTJjMzk0MzEwM2FjYzRi",
+  "git_pull_url": "https://gist.github.com/6ea1e7a39f57c481812c3943103acc4b.git",
+  "git_push_url": "https://gist.github.com/6ea1e7a39f57c481812c3943103acc4b.git",
+  "html_url": "https://gist.github.com/6ea1e7a39f57c481812c3943103acc4b",
+  "files": {
+    "code.js": {
+      "filename": "code.js",
+      "type": "application/javascript",
+      "language": "JavaScript",
+      "raw_url": "https://gist.githubusercontent.com/jade-addin/6ea1e7a39f57c481812c3943103acc4b/raw/bc1ea9c9018e1a57589336e351ac3920ec53a00b/code.js",
+      "size": 5802,
+      "truncated": false,
+      "content": "async function auto_exec(){\n  Jade.set_css(gist_files('style.css'))\n  tag(\"tools-body\").innerHTML=gist_files('goal-seek.html')\n  const tool_data = await jade.read_object_from_workbook(window.active_tool)\n  console.log(\"tool_data\",tool_data)\n  for(const[key,value] of Object.entries(tool_data)){\n    console.log(key, value)\n    tag(key).value=value\n  }\n\n}\n\nasync function save_props(){\n  const the_object={result:\"it works with the active tool\"}\n  await jade.save_object_to_workbook(the_object, window.active_tool)\n}\n\nasync function read_props(){\n  const obj = await jade.read_object_from_workbook(window.active_tool)\n  console.log(\"obj\",obj)\n}\n\n\n\nfunction default_value(input){\n  if(!input.value){\n    console.log(\"getting address of active cell\")\n    Excel.run(async (excel) => {\n      let rng = excel.workbook.getSelectedRange();\n      rng.load(\"address\");\n      await excel.sync();\n      input.value = rng.address.split(\"!\")[1]\n  })\n}\n}\n\n\nasync function goal_seek(){\n  const set = tag(\"set-cell\").value\n  const value = tag(\"to-value\").value\n  const change = tag(\"change-cell\").value\n  await jade.save_object_to_workbook({\n    \"set-cell\":set,\n    \"to-value\":value,\n    \"change-cell\":change\n    }, window.active_tool)\n\n  //set: the address of the target cell, value: the target value for the cell, change: the address of a precedent cell that will change to achieve the goal\n  Excel.run(async function(excel){\n    \n  //get the active worksheet and initialize variables\n  const sheet = excel.workbook.worksheets.getActiveWorksheet()\n  const changing_cell = sheet.getRange(change)\n  const set_cell = sheet.getRange(set)\n  const to_value = value\n  changing_cell.load('values')\n\n  await excel.sync()\n\n  const initial_change_value = changing_cell.values[0][0]\n\n  //Set initial guess\n  let initial_guess = initial_change_value\n  let results = []//array of all result_objects\n  let interval_found = false\n  let upper_bound\n  let lower_bound\n\n  \n  for(let j=0;j<=25;j++){//This will provide up to 1000 guesses at the interval boundaries, starting with an initial guess, the guesses change 25 times to reflect what is known about a potential solution.\n    if(results.length!==0) initial_guess = results[0].guess\n    \n    results = await add_guesses(initial_guess, results, changing_cell, set_cell)\n\n    //results.sort((a, b) => Math.abs(a.result)-Math.abs(b.result));\n  \n    for(let k=1;k<results.length;k++){\n      if(results[k].sign!==results[k-1].sign){\n        interval_found = true\n        if(results[k].guess>results[k-1].guess){\n          upper_bound = results[k].guess\n          lower_bound = results[k-1].guess\n        }else{\n          upper_bound = results[k-1].guess\n          lower_bound = results[k].guess\n        }\n        break\n      }\n    }\n    \n    if(interval_found) break\n    \n  }\n\n\n  if(interval_found){\n    const epsilon = 0.00001\n    let mid_point\n    let mid_point_result\n    let lower_bond_result\n    mid_point = (upper_bound+lower_bound)/2\n    \n    while(upper_bound-lower_bound>=epsilon){\n      // check to make sure the mid_point value doesn't produce the target\n      mid_point_result = await try_value(changing_cell,mid_point,set_cell) - to_value\n\n      if(Math.abs(mid_point_result)<epsilon) break\n\n      upper_bound_result = await try_value(changing_cell,upper_bound,set_cell) - to_value      \n      //decide the side of the mid_point to process\n      \n      if(upper_bound_result*mid_point_result>=0){//the interval is not between the upper bound and the midpoint\n        upper_bound = mid_point\n      }else{//the interval is between the upper bound and the midpoint\n        lower_bound = mid_point\n      }\n      mid_point = (upper_bound+lower_bound)/2\n\n    }\n    tag(\"pre-output\").innerHTML = `Solution found when ${change} is ${Math.round(mid_point*100000)/100000}`\n  }else{\n    tag(\"pre-output\").innerHTML =  `No solution was found after ${results.length+1} iterations`\n  }\n  //reset changing cell value\n  changing_cell.formulas = initial_change_value\n\n    async function try_value(change_cell, value, result_cell){\n      //change_cell is the address where the change is to be made, value is the change to be made, result cell contains the value to be returned.\n      change_cell.formulas = value\n      result_cell.load('values')\n      await excel.sync()\n      return result_cell.values[0][0]\n    }\n\n    async function add_guesses(initial_guess, results, changing_cell, set_cell){\n    //search for intervals around initial guess\n      for(let i = -5; i<=5; i=i+0.5){\n        let guess_factor\n        let guess\n        let result\n        result_sign = 0\n          \n        if(results.length>0) result_sign = results[0].sign\n        guess_factor = 10**i\n          \n          guess = initial_guess - initial_guess * guess_factor\n          result = await try_value(changing_cell,guess,set_cell)\n          if(typeof result === \"number\") {\n            result = result - to_value\n            result_object = {guess: guess, result: result, sign: result/Math.abs(result)}\n            results.push(result_object)\n            if(result_sign===0){\n              result_sign = result_object.sign\n            }else{\n              if(result_sign!==result_object.sign) return results\n            }\n          }\n\n          guess = initial_guess + initial_guess * guess_factor\n          result = await try_value(changing_cell,guess,set_cell)\n          if(typeof result === \"number\") {\n            result = result - to_value\n            result_object = {guess: guess, result: result, sign: result/Math.abs(result)}\n            results.push(result_object)\n            if(result_sign===0){\n              result_sign = result_object.sign\n            }else{\n              if(result_sign!==result_object.sign) return results\n            }\n          }\n      } \n      return results\n    }\n\n\n  })\n}\n \n  "
+    },
+    "goal-seek.html": {
+      "filename": "goal-seek.html",
+      "type": "text/html",
+      "language": "HTML",
+      "raw_url": "https://gist.githubusercontent.com/jade-addin/6ea1e7a39f57c481812c3943103acc4b/raw/253796f322055ca569989a6979a8ff7b35d318f7/goal-seek.html",
+      "size": 812,
+      "truncated": false,
+      "content": "<div style=\"margin:1rem; text-align: center;\"><div style=\"display:inline-block; text-align: left;\">\n<table>\n    <tbody>\n        <tr>\n            <td>Set Cell:</td>\n            <td><input size=\"6\" type=\"text\" id=\"set-cell\" onfocus=\"jade_modules.code.default_value(this)\"/></td>\n        </tr>            \n        <tr>\n            <td>To Value:</td>\n            <td><input size=\"6\" type=\"text\" id=\"to-value\" /></td>\n        </tr>            \n        <tr>\n            <td>By Changing:</td>\n            <td><input size=\"6\" type=\"text\" id=\"change-cell\" onfocus=\"jade_modules.code.default_value(this)\" /></td>\n        </tr>            \n        <tr>\n            <td colspan=\"2\" align=\"right\"><button onclick=\"jade_modules.code.goal_seek()\">Seek</button></td>\n        </tr>            \n    </tbody>\n</table>\n\n</div></div>"
+    },
+    "style.css": {
+      "filename": "style.css",
+      "type": "text/css",
+      "language": "CSS",
+      "raw_url": "https://gist.githubusercontent.com/jade-addin/6ea1e7a39f57c481812c3943103acc4b/raw/1b0d670779eb52160e65442cf04a3c760b4023ea/style.css",
+      "size": 24,
+      "truncated": false,
+      "content": ".light{\n    color:red;\n}"
+    }
+  },
+  "public": true,
+  "created_at": "2022-05-02T14:40:21Z",
+  "updated_at": "2022-05-02T17:25:28Z",
+  "description": "JET: Goal Seek for the JADE Excel Add-in",
+  "comments": 0,
+  "user": null,
+  "comments_url": "https://api.github.com/gists/6ea1e7a39f57c481812c3943103acc4b/comments",
+  "owner": {
+    "login": "jade-addin",
+    "id": 97227368,
+    "node_id": "U_kgDOBcuSaA",
+    "avatar_url": "https://avatars.githubusercontent.com/u/97227368?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/jade-addin",
+    "html_url": "https://github.com/jade-addin",
+    "followers_url": "https://api.github.com/users/jade-addin/followers",
+    "following_url": "https://api.github.com/users/jade-addin/following{/other_user}",
+    "gists_url": "https://api.github.com/users/jade-addin/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/jade-addin/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/jade-addin/subscriptions",
+    "organizations_url": "https://api.github.com/users/jade-addin/orgs",
+    "repos_url": "https://api.github.com/users/jade-addin/repos",
+    "events_url": "https://api.github.com/users/jade-addin/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/jade-addin/received_events",
+    "type": "User",
+    "site_admin": false
+  },
+  "forks": [
+
+  ],
+  "history": [
+    {
+      "user": {
+        "login": "theGove",
+        "id": 24496385,
+        "node_id": "MDQ6VXNlcjI0NDk2Mzg1",
+        "avatar_url": "https://avatars.githubusercontent.com/u/24496385?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/theGove",
+        "html_url": "https://github.com/theGove",
+        "followers_url": "https://api.github.com/users/theGove/followers",
+        "following_url": "https://api.github.com/users/theGove/following{/other_user}",
+        "gists_url": "https://api.github.com/users/theGove/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/theGove/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/theGove/subscriptions",
+        "organizations_url": "https://api.github.com/users/theGove/orgs",
+        "repos_url": "https://api.github.com/users/theGove/repos",
+        "events_url": "https://api.github.com/users/theGove/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/theGove/received_events",
+        "type": "User",
+        "site_admin": false
+      },
+      "version": "a33cbea53a2cd5c784da5a2ce2c1918cab840294",
+      "committed_at": "2022-05-02T17:25:39Z",
+      "change_status": {
+        "total": 204,
+        "additions": 204,
+        "deletions": 0
+      },
+      "url": "https://api.github.com/gists/6ea1e7a39f57c481812c3943103acc4b/a33cbea53a2cd5c784da5a2ce2c1918cab840294"
+    }
+  ],
+  "truncated": false
+}

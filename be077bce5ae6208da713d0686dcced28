@@ -1,0 +1,111 @@
+{
+  "url": "https://api.github.com/gists/be077bce5ae6208da713d0686dcced28",
+  "forks_url": "https://api.github.com/gists/be077bce5ae6208da713d0686dcced28/forks",
+  "commits_url": "https://api.github.com/gists/be077bce5ae6208da713d0686dcced28/commits",
+  "id": "be077bce5ae6208da713d0686dcced28",
+  "node_id": "G_kwDOBcuSaNoAIGJlMDc3YmNlNWFlNjIwOGRhNzEzZDA2ODZkY2NlZDI4",
+  "git_pull_url": "https://gist.github.com/be077bce5ae6208da713d0686dcced28.git",
+  "git_push_url": "https://gist.github.com/be077bce5ae6208da713d0686dcced28.git",
+  "html_url": "https://gist.github.com/be077bce5ae6208da713d0686dcced28",
+  "files": {
+    "code.js": {
+      "filename": "code.js",
+      "type": "application/javascript",
+      "language": "JavaScript",
+      "raw_url": "https://gist.githubusercontent.com/jade-addin/be077bce5ae6208da713d0686dcced28/raw/eb332e73e104f42e24bf924682e60c68890855bc/code.js",
+      "size": 2959,
+      "truncated": false,
+      "content": "//data.world\nasync function auto_exec(){\n  // set the tool css\n  Jade.set_css(gist_files('style.css'),\"naive-bayes\")\n  // place the tool html \n  tag(\"tools-body\").innerHTML=gist_files('tool.html')\n  // fill in values from last tool use\n  jade_modules.jet_engine.restore_html_values()\n}\n\nfunction save_inputs(){\n  jade_modules.jet_engine.save_html_values([\"token\",\"owner\",\"dataset\",\"sheet-name\",\"sql\"])\n}\n\nfunction dw_credentials(){\n  window.open(\"https://data.world/settings/advanced\")\n}\n\nasync function import_data(){\n  if(!tag(\"sql\").value && !tag(\"sheet-name\").value){\n    alert(\"You must specify either a Data Sheet or an SQL statement.\")\n    return\n  }\n\n  let sql=tag(\"sql\").value\n  if(!sql){\n    sql = \"SELECT * FROM \" + tag(\"sheet-name\").value\n  }\n\n  save_inputs()\n  \n  const url=`https://api.data.world/v0/sql/${tag(\"owner\").value}/${tag(\"dataset\").value}`\n  const options={ \n    headers: { \n      'Content-Type' : 'application/json',  \n      'Authorization': 'Bearer ' + tag(\"token\").value,\n    },\n    'method' : 'POST',\n    'body'   : JSON.stringify({\n      \"query\": sql,\n      \"includeTableSchema\": true,\n      \"queryRunToken\": uuid()\n    })\n  }\n    jade.hide_element(\"sql-error\")\n    const response = await fetch(url,options)\n    if(response.status===400){\n      const data=await response.text()\n      tag(\"sql-error\").innerHTML=data\n      jade.show_element(\"sql-error\")\n      return\n    }\n\n    console.log(\"response\",response) \n    const data = await response.json()\n    \n    console.log(data) \n    \n    const columns=[]\n    const rows=[]\n    for(let x=0; x<data[0].fields.length; x++){\n      columns.push(data[0].fields[x].name)\n    }\n    rows.push(columns)\n    for(let x=1; x<data.length; x++){\n      const row=[]\n      for(const column of columns){\n        row.push(data[x][column])\n      }    \n      rows.push(row)\n    }\n    \n    //console.log(rows)\n    await array_to_table(tag(\"sheet-name\").value,rows,1,1)\n}\n\n\nasync function array_to_table(sheet_name, range_data, start_row, start_col){\n  await Excel.run(async function(excel){\n    if(sheet_name){\n      var sheet = excel.workbook.worksheets.getItemOrNullObject(sheet_name); \n    }else{\n      var sheet = excel.workbook.worksheets.add(); \n    }\n    await excel.sync()\n    \n    if (sheet.isNullObject) { \n      sheet = excel.workbook.worksheets.add(sheet_name)\n    }else{\n      sheet.getUsedRange().clear()\n    }\n    await excel.sync()\n    \n    sheet.activate()\n    const range=sheet.getRangeByIndexes(start_row-1,start_col-1,range_data.length, range_data[0].length)\n    range.values=range_data\n    range.format.autofitColumns()\n    sheet.tables.add(range, true /*hasHeaders*/);\n    await excel.sync()\n  })\n  \n}\n\nfunction uuid() {\n  var u='',m='xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx',i=0,rb=Math.random()*0xffffffff|0;\n  while(i++<36) {\n      var c=m[i-1],r=rb&0xf,v=c=='x'?r:(r&0x3|0x8);\n      u+=(c=='-'||c=='4')?c:v.toString(16);rb=i%8==0?Math.random()*0xffffffff|0:rb>>4\n  }\n  return u\n}"
+    },
+    "junk.txt": {
+      "filename": "junk.txt",
+      "type": "text/plain",
+      "language": "Text",
+      "raw_url": "https://gist.githubusercontent.com/jade-addin/be077bce5ae6208da713d0686dcced28/raw/5e40c0877058c504203932e5136051cf3cd3519b/junk.txt",
+      "size": 4,
+      "truncated": false,
+      "content": "asdf"
+    },
+    "style.css": {
+      "filename": "style.css",
+      "type": "text/css",
+      "language": "CSS",
+      "raw_url": "https://gist.githubusercontent.com/jade-addin/be077bce5ae6208da713d0686dcced28/raw/d39505d838fc2aa81179641f58cff33134f23c1f/style.css",
+      "size": 6,
+      "truncated": false,
+      "content": "\r\n/**/"
+    },
+    "tool.html": {
+      "filename": "tool.html",
+      "type": "text/html",
+      "language": "HTML",
+      "raw_url": "https://gist.githubusercontent.com/jade-addin/be077bce5ae6208da713d0686dcced28/raw/b72898f15d9ae265e0097e322a89500a552288c0/tool.html",
+      "size": 5158,
+      "truncated": false,
+      "content": "<div class=\"hidden\" id=\"jet-refresh\" style=\"margin-left: .5rem;\"><i title=\"Re-load this tool.\" onclick=\"jade_modules.jet_engine.select_page()\" class=\"fa-solid fa-arrows-rotate\"  cursor:pointer\"></i></div>    \n<div style=\"margin:1rem; text-align: center;\"><div style=\"display:inline-block; text-align: left;\">\n<table style=\"width:100%\" align=\"center\" cellspacing=\"0\" cellpadding=\"4\">\n    <tbody>\n        <tr>\n            <td onclick=\"jade_modules.jet_engine.toggle_next_row(this)\" colspan=\"2\" class=\"section head\">1. Configure Connection</td>\n            <td class=\"section drop\"><i  title=\"Hide or show this step.\" onclick=\"jade_modules.jet_engine.toggle_table(this)\" class=\"fa-solid fa-chevron-up\"></i></td>\n        </tr>            \n        <tr class=\"hidden note\">\n            <td colspan=\"3\">Here you will identify yourself to data.world by supplying your read/write token a as well as specify the data set to work with.</td>\n        </tr>            \n        <tr>\n            <td onclick=\"jade_modules.jet_engine.toggle_next_row(this)\"  class=\"label\" >Read/Write Token:</td>\n            <td><input size=\"6\" type=\"text\" id=\"token\"/></td>\n            <td><i title=\"Open data.world.\" onclick=\"jade_modules.code.dw_credentials()\" class=\"fa-solid fa-globe\" style=\"color:#777; cursor:pointer\"></i></td>\n        </tr>            \n        <tr class=\"hidden note\">\n            <td colspan=\"3\">Open the <a href=\"https://data.world/settings/advanced\">data.world advanced settings page</a> (you may need to log in). Copy the Read/Write token and enter it here. </td>\n        </tr>            \n        <tr>\n            <td onclick=\"jade_modules.jet_engine.toggle_next_row(this)\"  class=\"label\" >Data Set Owner:</td>\n            <td><input size=\"6\" type=\"text\" id=\"owner\" value=\"atlas-query\"/></td>\n            <td></td>\n        </tr>            \n        <tr class=\"hidden note\">\n            <td colspan=\"3\">This is the name of the owner of the data set with which you want to work.  If the URL to the dataset you want to work with is <a href=\"https://data.world/atlas-query/crime-chicago-2018/workspace\">https://data.world/atlas-query/redcat-shoes/workspace</a>, then enter \"atlas-query\" here.</td>\n        </tr>            \n        <tr>\n            <td onclick=\"jade_modules.jet_engine.toggle_next_row(this)\"  class=\"label\" >Data Set Name:</td>\n            <td><input size=\"6\" type=\"text\" id=\"dataset\" value=\"redcat-shoes\"/></td>\n            <td></td>\n        </tr>            \n        <tr class=\"hidden note\">\n            <td colspan=\"3\">This is the name of the data set with which you want to work.  If the URL to the dataset you want to work with is <a href=\"https://data.world/atlas-query/crime-chicago-2018/workspace\">https://data.world/atlas-query/redcat-shoes/workspace</a>, then enter \"redcat-shoes\" here.</td>\n        </tr>            \n    </tbody>\n</table>\n<div style=\"margin-top: 1rem;\" />\n<table  style=\"width:100%\" align=\"center\" cellspacing=\"0\" cellpadding=\"4\">\n    <tbody>\n        <tr>\n            <td onclick=\"jade_modules.jet_engine.toggle_next_row(this)\" colspan=\"2\" class=\"section head\">2. Import Data</td>\n            <td class=\"section drop\"><i  title=\"Hide or show this step.\" onclick=\"jade_modules.jet_engine.toggle_table(this)\" class=\"fa-solid fa-chevron-up\"></i></td>\n        </tr>            \n        <tr class=\"hidden note\">\n            <td colspan=\"3\">Specify data desired and import.</td>\n        </tr>            \n        <tr>\n            <td onclick=\"jade_modules.jet_engine.toggle_next_row(this)\"  class=\"label\" >Data Sheet:</td>\n            <td><input size=\"6\" type=\"text\" id=\"sheet-name\" /></td>\n            <td><i title=\"Get the name of the active sheet.\" onclick=\"jade_modules.jet_engine.get_sheet_name('sheet-name')\" class=\"fa-solid fa-file\" style=\"color:#777; cursor:pointer\"></i></td>\n        </tr>            \n        <tr class=\"hidden note\">\n            <td colspan=\"3\">This is the name of the worksheet that you want to create when you import the data.  Be careful; all data will be erased from this sheet when the data are imported.  Leave this blank to create a sheet with an arbitrary name.</td>\n        </tr>            \n        <tr>\n            <td colspan=\"3\" onclick=\"jade_modules.jet_engine.toggle_next_row(this)\"  class=\"label\" >SQL:</td>\n        </tr>            \n        <tr class=\"hidden note\">\n            <td colspan=\"3\">Enter a <a href=\"https://docs.data.world/documentation/sql/concepts/basic/intro.html\">Structured Query Language</a> statement to specify the data you want to import.  Leave blank to select all records from a table with the name entered in the \"Data Sheet\" field above.</td>\n        </tr>            \n        <tr>\n            <td colspan=\"3\"> <textarea style=\"width:100%\" id=\"sql\">SELECT * FROM customer</textarea></td>\n        </tr>            \n        <tr>\n            <td colspan=\"3\" align=\"right\"><button onclick=\"jade_modules.code.import_data()\">Import Data</button></td>\n        </tr>            \n        <tr>\n            <td id=\"sql-error\" class=\"hidden\" colspan=\"3\" style=\"background-color: white; color:red ;\"></td>\n        </tr>            \n    </tbody>\n</table>\n\n\n\n\n</div></div>"
+    }
+  },
+  "public": true,
+  "created_at": "2022-05-02T14:36:00Z",
+  "updated_at": "2022-05-09T23:43:37Z",
+  "description": "JET: data.world import to worksheet",
+  "comments": 0,
+  "user": null,
+  "comments_url": "https://api.github.com/gists/be077bce5ae6208da713d0686dcced28/comments",
+  "owner": {
+    "login": "jade-addin",
+    "id": 97227368,
+    "node_id": "U_kgDOBcuSaA",
+    "avatar_url": "https://avatars.githubusercontent.com/u/97227368?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/jade-addin",
+    "html_url": "https://github.com/jade-addin",
+    "followers_url": "https://api.github.com/users/jade-addin/followers",
+    "following_url": "https://api.github.com/users/jade-addin/following{/other_user}",
+    "gists_url": "https://api.github.com/users/jade-addin/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/jade-addin/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/jade-addin/subscriptions",
+    "organizations_url": "https://api.github.com/users/jade-addin/orgs",
+    "repos_url": "https://api.github.com/users/jade-addin/repos",
+    "events_url": "https://api.github.com/users/jade-addin/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/jade-addin/received_events",
+    "type": "User",
+    "site_admin": false
+  },
+  "forks": [
+
+  ],
+  "history": [
+    {
+      "user": {
+        "login": "theGove",
+        "id": 24496385,
+        "node_id": "MDQ6VXNlcjI0NDk2Mzg1",
+        "avatar_url": "https://avatars.githubusercontent.com/u/24496385?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/theGove",
+        "html_url": "https://github.com/theGove",
+        "followers_url": "https://api.github.com/users/theGove/followers",
+        "following_url": "https://api.github.com/users/theGove/following{/other_user}",
+        "gists_url": "https://api.github.com/users/theGove/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/theGove/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/theGove/subscriptions",
+        "organizations_url": "https://api.github.com/users/theGove/orgs",
+        "repos_url": "https://api.github.com/users/theGove/repos",
+        "events_url": "https://api.github.com/users/theGove/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/theGove/received_events",
+        "type": "User",
+        "site_admin": false
+      },
+      "version": "2e94bd10ab404e8c8081e92be230432645765932",
+      "committed_at": "2022-05-09T23:43:36Z",
+      "change_status": {
+        "total": 191,
+        "additions": 191,
+        "deletions": 0
+      },
+      "url": "https://api.github.com/gists/be077bce5ae6208da713d0686dcced28/2e94bd10ab404e8c8081e92be230432645765932"
+    }
+  ],
+  "truncated": false
+}

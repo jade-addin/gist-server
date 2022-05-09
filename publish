@@ -1,0 +1,26 @@
+# you pass in a path to a foler that ontains a single gist.  This will squash that gist and publish it to a gist server
+# example call:
+# ./publish ../gists/jade_tools/tools/data.world
+# must be run from the gist-server folder
+home=$PWD
+cd $1
+gist=(*)
+echo "$gist"
+cd $gist
+echo $PWD
+# squash the gist
+git checkout --orphan latest_branch
+git add -A
+git commit -am "commit message"
+git branch -D main
+git branch -m main
+git push -f origin main
+
+#copy to gist server
+cd $home
+echo $PWD
+curl -o $gist https://api.github.com/gists/$gist?$RANDOM$RANDOM
+git add $gist
+git commit -m "publishing gist"
+git push
+
