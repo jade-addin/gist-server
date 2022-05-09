@@ -38,7 +38,7 @@
   },
   "public": true,
   "created_at": "2022-05-02T14:11:50Z",
-  "updated_at": "2022-05-09T23:39:34Z",
+  "updated_at": "2022-05-09T23:50:00Z",
   "description": "JET: Naive Bayes tool for the JADE Excel Add-in",
   "comments": 0,
   "user": null,
@@ -88,74 +88,14 @@
         "type": "User",
         "site_admin": false
       },
-      "version": "a4d50eb447099e519948dc80538826b81e124990",
-      "committed_at": "2022-05-09T23:38:17Z",
+      "version": "18c972acbc83d35748e5a88e09c5e24d053f74a5",
+      "committed_at": "2022-05-09T23:49:59Z",
       "change_status": {
-        "total": 66,
-        "additions": 58,
-        "deletions": 8
-      },
-      "url": "https://api.github.com/gists/43fb536747da1d8111b9e7b72c13022e/a4d50eb447099e519948dc80538826b81e124990"
-    },
-    {
-      "user": {
-        "login": "theGove",
-        "id": 24496385,
-        "node_id": "MDQ6VXNlcjI0NDk2Mzg1",
-        "avatar_url": "https://avatars.githubusercontent.com/u/24496385?v=4",
-        "gravatar_id": "",
-        "url": "https://api.github.com/users/theGove",
-        "html_url": "https://github.com/theGove",
-        "followers_url": "https://api.github.com/users/theGove/followers",
-        "following_url": "https://api.github.com/users/theGove/following{/other_user}",
-        "gists_url": "https://api.github.com/users/theGove/gists{/gist_id}",
-        "starred_url": "https://api.github.com/users/theGove/starred{/owner}{/repo}",
-        "subscriptions_url": "https://api.github.com/users/theGove/subscriptions",
-        "organizations_url": "https://api.github.com/users/theGove/orgs",
-        "repos_url": "https://api.github.com/users/theGove/repos",
-        "events_url": "https://api.github.com/users/theGove/events{/privacy}",
-        "received_events_url": "https://api.github.com/users/theGove/received_events",
-        "type": "User",
-        "site_admin": false
-      },
-      "version": "7c25a126f18a5ac7c040f35486da329e5961f54c",
-      "committed_at": "2022-05-03T11:33:30Z",
-      "change_status": {
-        "total": 291,
-        "additions": 264,
-        "deletions": 27
-      },
-      "url": "https://api.github.com/gists/43fb536747da1d8111b9e7b72c13022e/7c25a126f18a5ac7c040f35486da329e5961f54c"
-    },
-    {
-      "user": {
-        "login": "theGove",
-        "id": 24496385,
-        "node_id": "MDQ6VXNlcjI0NDk2Mzg1",
-        "avatar_url": "https://avatars.githubusercontent.com/u/24496385?v=4",
-        "gravatar_id": "",
-        "url": "https://api.github.com/users/theGove",
-        "html_url": "https://github.com/theGove",
-        "followers_url": "https://api.github.com/users/theGove/followers",
-        "following_url": "https://api.github.com/users/theGove/following{/other_user}",
-        "gists_url": "https://api.github.com/users/theGove/gists{/gist_id}",
-        "starred_url": "https://api.github.com/users/theGove/starred{/owner}{/repo}",
-        "subscriptions_url": "https://api.github.com/users/theGove/subscriptions",
-        "organizations_url": "https://api.github.com/users/theGove/orgs",
-        "repos_url": "https://api.github.com/users/theGove/repos",
-        "events_url": "https://api.github.com/users/theGove/events{/privacy}",
-        "received_events_url": "https://api.github.com/users/theGove/received_events",
-        "type": "User",
-        "site_admin": false
-      },
-      "version": "d23b79bcce777b504d1349e415a97c9833994973",
-      "committed_at": "2022-05-02T17:58:33Z",
-      "change_status": {
-        "total": 328,
-        "additions": 328,
+        "total": 615,
+        "additions": 615,
         "deletions": 0
       },
-      "url": "https://api.github.com/gists/43fb536747da1d8111b9e7b72c13022e/d23b79bcce777b504d1349e415a97c9833994973"
+      "url": "https://api.github.com/gists/43fb536747da1d8111b9e7b72c13022e/18c972acbc83d35748e5a88e09c5e24d053f74a5"
     }
   ],
   "truncated": false
