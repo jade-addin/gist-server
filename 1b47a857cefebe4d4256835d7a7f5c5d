@@ -1,0 +1,111 @@
+{
+  "url": "https://api.github.com/gists/1b47a857cefebe4d4256835d7a7f5c5d",
+  "forks_url": "https://api.github.com/gists/1b47a857cefebe4d4256835d7a7f5c5d/forks",
+  "commits_url": "https://api.github.com/gists/1b47a857cefebe4d4256835d7a7f5c5d/commits",
+  "id": "1b47a857cefebe4d4256835d7a7f5c5d",
+  "node_id": "G_kwDOBcuSaNoAIDFiNDdhODU3Y2VmZWJlNGQ0MjU2ODM1ZDdhN2Y1YzVk",
+  "git_pull_url": "https://gist.github.com/1b47a857cefebe4d4256835d7a7f5c5d.git",
+  "git_push_url": "https://gist.github.com/1b47a857cefebe4d4256835d7a7f5c5d.git",
+  "html_url": "https://gist.github.com/1b47a857cefebe4d4256835d7a7f5c5d",
+  "files": {
+    "airtable.html": {
+      "filename": "airtable.html",
+      "type": "text/html",
+      "language": "HTML",
+      "raw_url": "https://gist.githubusercontent.com/jade-addin/1b47a857cefebe4d4256835d7a7f5c5d/raw/9ad674e5b47d6b30fa8dc5e6b5d01659f60aed8b/airtable.html",
+      "size": 5689,
+      "truncated": false,
+      "content": "<div class=\"hidden\" id=\"jet-refresh\" style=\"margin-left: .5rem;\"><i title=\"Re-load this tool.\" onclick=\"jade_modules.jet_engine.select_page()\" class=\"fa-solid fa-arrows-rotate\"  cursor:pointer\"></i></div>    \n<div style=\"margin:1rem; text-align: center;\"><div style=\"display:inline-block; text-align: left;\">\n<table style=\"width:100%\" align=\"center\" cellspacing=\"0\" cellpadding=\"4\">\n    <tbody>\n        <tr>\n            <td onclick=\"jade_modules.jet_engine.toggle_next_row(this)\" colspan=\"2\" class=\"section head\">1. Configure Connection</td>\n            <td class=\"section drop\"><i  title=\"Hide or show this step.\" onclick=\"jade_modules.jet_engine.toggle_table(this)\" class=\"fa-solid fa-chevron-up\"></i></td>\n        </tr>            \n        <tr class=\"hidden note\">\n            <td colspan=\"3\">Here you will identify yourself to airtable.com by supplying your API key as well as specify the base to work with.</td>\n        </tr>            \n        <tr>\n            <td onclick=\"jade_modules.jet_engine.toggle_next_row(this)\"  class=\"label\" >API Key:</td>\n            <td><input size=\"6\" type=\"text\" id=\"api-key\"/></td>\n            <td><i title=\"Open airtable.com account overview.\" onclick=\"jade_modules.code.airtable_credentials()\" class=\"fa-solid fa-globe\" style=\"color:#777; cursor:pointer\"></i></td>\n        </tr>            \n        <tr class=\"hidden note\">\n            <td colspan=\"3\">Open your <a href=\"https://api.airtable.com\">Airtable Account Overview page</a> (you may need to log in). Copy the API Key and enter it here. </td>\n        </tr>            \n        <tr>\n            <td onclick=\"jade_modules.jet_engine.toggle_next_row(this)\"  class=\"label\" >Base ID:</td>\n            <td><input size=\"6\" type=\"text\" id=\"base-id\"/></td>\n            <td><i title=\"Open airtable.com API page.\" onclick=\"jade_modules.code.airtable_api()\" class=\"fa-solid fa-globe\" style=\"color:#777; cursor:pointer\"></i></td>\n        </tr>            \n        <tr class=\"hidden note\">\n            <td colspan=\"3\">This is identifer of the base that holds the data you want to import.  Browse to <a href=\"https://api.airtable.com\">https://api.airtable.com</a>, click on the base to which you want to connect and copy the Base ID (it's in the third paragraph).  Enter the Base ID here.</td>\n        </tr>            \n    </tbody>\n</table>\n<div style=\"margin-top: 1rem;\" />\n<table  style=\"width:100%\" align=\"center\" cellspacing=\"0\" cellpadding=\"4\">\n    <tbody>\n        <tr>\n            <td onclick=\"jade_modules.jet_engine.toggle_next_row(this)\" colspan=\"2\" class=\"section head\">2. Import Data</td>\n            <td class=\"section drop\"><i  title=\"Hide or show this step.\" onclick=\"jade_modules.jet_engine.toggle_table(this)\" class=\"fa-solid fa-chevron-up\"></i></td>\n        </tr>            \n        <tr class=\"hidden note\">\n            <td colspan=\"3\">Specify data desired and import.</td>\n        </tr>            \n        <tr>\n            <td onclick=\"jade_modules.jet_engine.toggle_next_row(this)\"  class=\"label\" >Table Name:</td>\n            <td><input size=\"6\" type=\"text\" id=\"table-name\"/></td>\n            <td></td>\n        </tr>            \n        <tr class=\"hidden note\">\n            <td colspan=\"3\">This is the name of the table you want to import.</td>\n        </tr>            \n        <tr>\n            <td colspan=\"3\" onclick=\"jade_modules.jet_engine.toggle_next_row(this)\"  class=\"label\" >Filter Formula:</td>\n        </tr>            \n        <tr class=\"hidden note\">\n            <td colspan=\"3\">Enter a <a href=\"https://support.airtable.com/hc/en-us/articles/203255215-Formula-field-reference\">filter formula</a> To inidcate which records to include in the import.</td>\n        </tr>            \n        <tr>\n            <td colspan=\"3\"> <textarea style=\"width:100%\" id=\"filter\"></textarea></td>\n        </tr>            \n        <tr>\n            <td colspan=\"3\" align=\"right\"><button onclick=\"jade_modules.code.import_data()\">Import Data</button></td>\n        </tr>            \n        <tr>\n            <td id=\"sql-error\" class=\"hidden\" colspan=\"3\" style=\"background-color: white; color:red ;\"></td>\n        </tr>            \n    </tbody>\n</table>\n<div style=\"margin-top: 1rem;\" />\n<table  style=\"width:100%\" align=\"center\" cellspacing=\"0\" cellpadding=\"4\">\n    <tbody>\n        <tr>\n            <td onclick=\"jade_modules.jet_engine.toggle_next_row(this)\" colspan=\"2\" class=\"section head\">3. Automate</td>\n            <td class=\"section drop\"><i  title=\"Hide or show this step.\" onclick=\"jade_modules.jet_engine.toggle_table(this)\" class=\"fa-solid fa-chevron-up\"></i></td>\n        </tr>            \n        <tr class=\"hidden note\">\n            <td colspan=\"3\">Identify a range with information for importing many tables</td>\n        </tr>            \n        <tr>\n            <td onclick=\"jade_modules.jet_engine.toggle_next_row(this)\"  class=\"label\" >Range:</td>\n            <td><input size=\"6\" type=\"text\" id=\"data-range\" onfocus=\"jade_modules.jet_engine.default_selected_range(this, true)\"/></td>\n            <td><i title=\"Get the address of the selected range.\" onclick=\"jade_modules.jet_engine.get_multicell_address('data-range',true)\" class=\"fa-solid fa-table\" style=\"color:#777; cursor:pointer\"></i></td>\n        </tr>            \n        <tr class=\"hidden note\">\n            <td colspan=\"3\">Select a range with one or two columns, the first column has names of tables you want to import, the second (if any) has the filter formula you want to apply.</td>\n        </tr>               <tr>\n            <td colspan=\"3\" align=\"right\"><button onclick=\"jade_modules.code.automate_import()\">Automate Import</button></td>\n        </tr>            \n    </tbody>\n</table>\n\n\n\n\n</div></div>"
+    },
+    "code.js": {
+      "filename": "code.js",
+      "type": "application/javascript",
+      "language": "JavaScript",
+      "raw_url": "https://gist.githubusercontent.com/jade-addin/1b47a857cefebe4d4256835d7a7f5c5d/raw/3f4879c23675a2c69b757d7270e72bb681412fec/code.js",
+      "size": 9887,
+      "truncated": false,
+      "content": "//data.world\nconst api_prefix = \"https://api.airtable.com/v0/\"\nasync function auto_exec(){\n  // set the tool css\n  Jade.set_css(gist_files('style.css'),\"naive-bayes\")\n  // place the tool html \n  tag(\"tools-body\").innerHTML=gist_files('airtable.html')\n  // fill in values from last tool use\n  jade_modules.jet_engine.restore_html_values()\n}\n\nfunction save_inputs(){\n  jade_modules.jet_engine.save_html_values([\"api-key\",\"base-id\",\"table-name\",\"filter\",\"data-range\"])\n}\n\nfunction airtable_credentials(){\n  window.open(\"https://airtable.com/account\")\n}\nfunction airtable_api(){\n  window.open(\"https://api.airtable.com\")\n}\n\nasync function automate_import(){\n  save_inputs()\n //console.log(\"automate import\")\n  await Excel.run(async function(excel){\n    if(!tag(\"data-range\").value){\n      tag(\"sql-error\").innerHTML=\"You must specify a range with the information to automate the import.\"\n      jade.show_element(\"sql-error\")\n      return\n    }\n  \n    const address= tag(\"data-range\").value.split(\"!\")\n    const range = excel.workbook.worksheets.getItem(address[0]).getRange(address[1])\n    range.load(\"values\")\n    await excel.sync()\n    for(const row of range.values){\n      if(row.length>1){\n        do_import_data(row[0],row[1])\n      }else{\n        do_import_data(row[0],null)\n      }\n    }\n  })\n}\n\nasync function import_data(){\n  do_import_data(tag(\"table-name\").value,tag(\"filter\").value)\n}\n\nasync function do_import_data(table_name, filter){\n  if(!table_name){\n    tag(\"sql-error\").innerHTML=\"You must specify a the name of a table in your Airtable Base.\"\n    jade.show_element(\"sql-error\")\n    return\n  }\n\n\n\n  save_inputs()\n  \n  jade.hide_element(\"sql-error\")\n\n\n  const data=await get_airtable(tag(\"base-id\").value, tag(\"api-key\").value, table_name, filter) \n //console.log(data) \n  if(data.error){\n    tag(\"sql-error\").innerHTML=data.error.message\n    jade.show_element(\"sql-error\")\n    return\n  }\n  const fields = {}\n  // scan the records to find all fields\n  for(const record of data){\n    for(const [name,value] of Object.entries(record.fields)){\n      if(!fields[name]){\n        if(Array.isArray(value)){\n          fields[name]={\n            array:true,\n            count:1\n          }\n        }else{\n          fields[name]={array:false}\n        }\n      }\n      if(Array.isArray(value) && value.length>fields[name].count){\n        fields[name].count=value.length\n      }\n    }\n  }\n\n //console.log(\"fields\", fields)\n\n  \n  const columns=[]\n  const to_many_columns=[]\n  const rows=[]\n  for(const [name,field] of Object.entries(fields)){\n    if(field.array){\n      if(field.count===1){\n        columns.push(name)\n      }else{\n        to_many_columns.push(name)\n      }\n    }else{\n      columns.push(name)\n    }\n  }\n\n  for(const record of data){\n    const row=[record.id, record.createdTime]\n    for(const column of columns){\n      if(Array.isArray(record.fields[column])){\n        if(typeof record.fields[column][0] === 'object'){\n          // the only entry of this array is an object\n          row.push(record.fields[column][0].id)\n          fields[column].object=true\n        }else{\n          row.push(record.fields[column][0])\n        }\n      }else{\n        row.push(record.fields[column])\n      }\n      \n    }    \n    rows.push(row)\n  }\n  columns.unshift(\"createdTime\")\n  columns.unshift(\"id\")\n  rows.unshift(columns)\n //console.log(rows)\n  await array_to_table(table_name,rows,1,1)\n\n  // write out single value fields that are ojects\n //console.log(\"fields\",fields)\n  for(const [field_name,field] of Object.entries(fields)){\n    if(field.object){ \n     //console.log(field_name,\"is an object\")\n      await make_attribute_sheet(table_name, field_name, data)\n    }\n  }\n\n  // wirte out the \"to_many_\" columns\n  for(const column of to_many_columns){\n   //console.log(\"Many\",column)\n    await make_attribute_sheet(table_name, column, data)\n  }\n\n\n}\n\nasync function make_attribute_sheet(table_name, field_name, data){\n  const sheet_name=`${table_name}_${field_name}`\n  // figure out the columns we need\n  const columns={}\n  rows=[[table_name+\"_id\"]]\n  for(const record of data){\n    if(record.fields[field_name]){\n     //console.log(\"--------------record.fields[field_name]\",record.fields[field_name])\n\n      let the_value=record.fields[field_name]\n      if(!Array.isArray(the_value)){\n        // make scalars into array to handle uniformily\n        the_value=[the_value]\n      }\n     //console.log(\"the_value\",the_value)\n      for(const elem of the_value){\n        if(typeof elem === \"object\"){\n          add_columns(columns,elem)\n        }else{\n          if(!columns[field_name]){\n            columns[field_name]=[field_name]\n          }\n        }\n      }\n    }\n  }\n //console.log(\"attribute sheet columns\", columns)\n  \n  //build the data array\n  for(const column of Object.keys(columns)){\n    rows[0].push(column)\n  }\n  for(const record of data){\n    if(record.fields[field_name]){\n      for(const entry of record.fields[field_name]){\n        const row=[record.id]\n        if(typeof entry === \"object\"){\n          for(const [name, path] of Object.entries(columns)){\n            const data=get_deep_value(entry, path)\n            //console.log(\"data\",data)\n            row.push(data)\n          }\n        }else{\n          row.push(entry)\n        }\n        //console.log(\"row\",row)\n        rows.push(row)\n      }\n    }\n  }\n //console.log(\"rows\", rows)\n  array_to_table(sheet_name,rows,1,1)\n}\n\nfunction get_deep_value(object, path){\n  let ptr=object\n  for(const step of path){\n    if(ptr[step]){\n      ptr=ptr[step]\n    }else{\n      return null\n    }\n  }\n  return ptr\n}\nfunction add_columns(columns, object, prefix=[]){\n  for(const [key, val] of Object.entries(object)){\n    if(typeof val === 'object'){\n      const col_name_array = prefix.slice()\n      col_name_array.push(key)\n      add_columns(columns, val, col_name_array)\n    }else{\n      const col_name_array = prefix.slice()\n      col_name_array.push(key)\n      const col_name = col_name_array.join(\"_\")\n      if(!columns[col_name]){\n        columns[col_name]=col_name_array\n      }\n    }\n  }\n\n}\n\nasync function array_to_table(sheet_name, range_data, start_row, start_col, schema){\n  await Excel.run(async function(excel){\n    if(sheet_name){\n      var sheet = excel.workbook.worksheets.getItemOrNullObject(sheet_name); \n    }else{\n      var sheet = excel.workbook.worksheets.add(); \n    }\n    await excel.sync()\n    \n    if (sheet.isNullObject) { \n      sheet = excel.workbook.worksheets.add(sheet_name)\n    }else{\n      sheet.getUsedRange().clear()\n    }\n    await excel.sync()\n    \n    sheet.activate()\n    if(schema){\n     //console.log(\"in schema\", schema)\n      for(let x=0;x<schema.fields.length;x++){\n        const field = schema.fields[x]\n        switch(field.type){\n          case \"string\":\n            sheet.getRangeByIndexes(start_row,start_col+x-1,range_data.length-1,1).numberFormat=\"@\"\n            break\n          case \"date\":\n            sheet.getRangeByIndexes(start_row,start_col+x-1,range_data.length-1,1).numberFormat=\"yyyy-mm-dd\"\n            break\n          case \"integer\":\n            sheet.getRangeByIndexes(start_row,start_col+x-1,range_data.length-1,1).numberFormat=\"0\"\n            break\n          case \"number\":\n            sheet.getRangeByIndexes(start_row,start_col+x-1,range_data.length-1,1).numberFormat=\"General;-General\"\n            break\n          default:  \n        }\n\n      }\n    }\n    const range=sheet.getRangeByIndexes(start_row-1,start_col-1,range_data.length, range_data[0].length)\n    range.values=range_data\n    range.format.autofitColumns()\n    sheet.tables.add(range, true /*hasHeaders*/);\n    await excel.sync()\n  })\n  \n}\n\n\n\n     ////////////////////////////////////////////////////////////////////////////////\n    //                                                                            //\n   //   Airtable code                                                            // \n  //                                                                            //  \n //                                                                            // \n////////////////////////////////////////////////////////////////////////////////\n\n\n\nasync function get_airtable(baseID, apiKey, table, filter, columns, view, sort) {\n  // a filter is a \"filterFormula clause\"\n  try{\n    let url_params=[]\n    \n    let url = api_prefix + baseID + \"/\" + table\n    \n    if(sort){url_params.push(get_sort_param(sort))}\n    if(view){url_params.push(\"view=\"+encodeURIComponent(view))}\n    if(filter){url_params.push(\"filterByFormula=\"+encodeURIComponent(filter))}\n    if(columns){url_params.push(\"fields%5B%5D=\" + columns.join(\"&fields%5B%5D=\"))}\n    if(url_params.length>0){url+=\"?\"+url_params.join(\"&\")}\n   //console.log(\"url\",url)\n\n    let options = { method  : \"GET\"};\n\n    options.headers={\"Content-Type\": 'application/x-www-form-urlencoded',  Authorization: 'Bearer ' + apiKey}\n\n    //console.log(options);\n    \n    const records=[]\n    \n    let offset=\"\"\n    while(true){ // page through the results\n      //console.log(url+ offset);\n      const response = await fetch(url + offset,options)\n     //console.log(\"response\",response)\n      if(response.status===400){\n        const data=await response.text()\n        tag(\"sql-error\").innerHTML=data\n        jade.show_element(\"sql-error\")\n        return\n      }\n  \n  \n      const data = await response.json()\n      \n      //const airtable_fetch=JSON.parse(data)\n      if(data.error){\n        return data\n      }\n      \n      //console.log(\"airtable_fetch\",airtable_fetch.offset)\n      records.push(...data.records)\n      if (!data.offset){\n        //there are no records.  get us out\n        break\n      }\n      if(url_params.length===0){\n        offset=\"?offset=\"+data.offset\n      }else{\n        offset=\"&offset=\"+data.offset\n      }\n    \n    }\n\n    //console.log(\"records\", records.length)\n    return records\n  }catch(e){\n    return {error:e}\n  }\n\n}\n\n\n"
+    },
+    "manifest.json": {
+      "filename": "manifest.json",
+      "type": "application/json",
+      "language": "JSON",
+      "raw_url": "https://gist.githubusercontent.com/jade-addin/1b47a857cefebe4d4256835d7a7f5c5d/raw/c0ac6a321cd574d53c1738ee0a6e31de943b2fec/manifest.json",
+      "size": 45,
+      "truncated": false,
+      "content": "[\n    \"code.js\",\"airtable.html\",\"style.css\"\n]"
+    },
+    "style.css": {
+      "filename": "style.css",
+      "type": "text/css",
+      "language": "CSS",
+      "raw_url": "https://gist.githubusercontent.com/jade-addin/1b47a857cefebe4d4256835d7a7f5c5d/raw/7068cde4d17e9f6c8158b5bf818f296d7fefcaa1/style.css",
+      "size": 4,
+      "truncated": false,
+      "content": "/**/"
+    }
+  },
+  "public": true,
+  "created_at": "2022-05-19T14:44:42Z",
+  "updated_at": "2022-05-20T21:27:30Z",
+  "description": "JET: airtable import to workwheet",
+  "comments": 0,
+  "user": null,
+  "comments_url": "https://api.github.com/gists/1b47a857cefebe4d4256835d7a7f5c5d/comments",
+  "owner": {
+    "login": "jade-addin",
+    "id": 97227368,
+    "node_id": "U_kgDOBcuSaA",
+    "avatar_url": "https://avatars.githubusercontent.com/u/97227368?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/jade-addin",
+    "html_url": "https://github.com/jade-addin",
+    "followers_url": "https://api.github.com/users/jade-addin/followers",
+    "following_url": "https://api.github.com/users/jade-addin/following{/other_user}",
+    "gists_url": "https://api.github.com/users/jade-addin/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/jade-addin/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/jade-addin/subscriptions",
+    "organizations_url": "https://api.github.com/users/jade-addin/orgs",
+    "repos_url": "https://api.github.com/users/jade-addin/repos",
+    "events_url": "https://api.github.com/users/jade-addin/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/jade-addin/received_events",
+    "type": "User",
+    "site_admin": false
+  },
+  "forks": [
+
+  ],
+  "history": [
+    {
+      "user": {
+        "login": "theGove",
+        "id": 24496385,
+        "node_id": "MDQ6VXNlcjI0NDk2Mzg1",
+        "avatar_url": "https://avatars.githubusercontent.com/u/24496385?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/theGove",
+        "html_url": "https://github.com/theGove",
+        "followers_url": "https://api.github.com/users/theGove/followers",
+        "following_url": "https://api.github.com/users/theGove/following{/other_user}",
+        "gists_url": "https://api.github.com/users/theGove/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/theGove/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/theGove/subscriptions",
+        "organizations_url": "https://api.github.com/users/theGove/orgs",
+        "repos_url": "https://api.github.com/users/theGove/repos",
+        "events_url": "https://api.github.com/users/theGove/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/theGove/received_events",
+        "type": "User",
+        "site_admin": false
+      },
+      "version": "0abfe3e7c0e09a6af03cc48c6a93ae7f9cb4b30c",
+      "committed_at": "2022-05-20T21:27:29Z",
+      "change_status": {
+        "total": 453,
+        "additions": 453,
+        "deletions": 0
+      },
+      "url": "https://api.github.com/gists/1b47a857cefebe4d4256835d7a7f5c5d/0abfe3e7c0e09a6af03cc48c6a93ae7f9cb4b30c"
+    }
+  ],
+  "truncated": false
+}
