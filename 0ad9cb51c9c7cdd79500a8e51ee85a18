@@ -1,0 +1,102 @@
+{
+  "url": "https://api.github.com/gists/0ad9cb51c9c7cdd79500a8e51ee85a18",
+  "forks_url": "https://api.github.com/gists/0ad9cb51c9c7cdd79500a8e51ee85a18/forks",
+  "commits_url": "https://api.github.com/gists/0ad9cb51c9c7cdd79500a8e51ee85a18/commits",
+  "id": "0ad9cb51c9c7cdd79500a8e51ee85a18",
+  "node_id": "G_kwDOBcuSaNoAIDBhZDljYjUxYzljN2NkZDc5NTAwYThlNTFlZTg1YTE4",
+  "git_pull_url": "https://gist.github.com/0ad9cb51c9c7cdd79500a8e51ee85a18.git",
+  "git_push_url": "https://gist.github.com/0ad9cb51c9c7cdd79500a8e51ee85a18.git",
+  "html_url": "https://gist.github.com/0ad9cb51c9c7cdd79500a8e51ee85a18",
+  "files": {
+    "code.js": {
+      "filename": "code.js",
+      "type": "application/javascript",
+      "language": "JavaScript",
+      "raw_url": "https://gist.githubusercontent.com/jade-addin/0ad9cb51c9c7cdd79500a8e51ee85a18/raw/d7f3c879e4594f7aa30ce38fabc1a556d5f59da1/code.js",
+      "size": 439,
+      "truncated": false,
+      "content": "async function auto_exec(){\n  const jet_engine_gist_id = \"6e16e7521df65a93b17dd9b74c9161eb\"\n  await jade.load_gist(jet_engine_gist_id)\n  console.log(\"jet css\",gist_files('style.css'))\n  Jade.set_css(gist_files('style.css'),\"jet\")        // load css for these tools\n  jade_modules.jet_engine.launch(my_gist_id())           // run the jet engine on this gist\n  console.log(\"just loaded Jet Tools for general use (not in development mode)\")\n}"
+    },
+    "jet_tools.json": {
+      "filename": "jet_tools.json",
+      "type": "application/json",
+      "language": "JSON",
+      "raw_url": "https://gist.githubusercontent.com/jade-addin/0ad9cb51c9c7cdd79500a8e51ee85a18/raw/03c3a1530831f20189e4ba69f783aaa8fc955917/jet_tools.json",
+      "size": 2081,
+      "truncated": false,
+      "content": "{\n    \"groups\":[\n        {   \"name\":\"Introduction\",\n            \"text\":\"The tools available here extend the functionality of Excel.\"\n        },\n        {   \"name\":\"Analytics\",\n            \"text\":\"Perform statistical analyses on your data\",\n            \"tools\":[\n            {\n                \"name\":\"Naive Bayes Analysis\",\n                \"text\":\"Compute a Naive Bayes Analysis for classification\",\n                \"gist_id\":\"43fb536747da1d8111b9e7b72c13022e\"\n            },\n            {\n                \"name\":\"Logistic Regression\",\n                \"text\":\"Compute a logistic regression\",\n                \"gist_id\":\"9382a0ae7967eef62acf20f0f31a8c31\"\n            }\n            ]\n        },\n        {   \"name\":\"What-If Analysis\",\n            \"text\":\"What-If analysis allows you to examine how a spreadsheet model appear under different conditions\",\n            \"tools\":[\n                {\n                    \"name\":\"Goal Seek\",\n                    \"text\":\"Adjust a cell to try to find a particular result for a formula.\",\n                    \"gist_id\":\"6ea1e7a39f57c481812c3943103acc4b\"\n                }\n            ]\n        \n        },\n        {   \"name\":\"Data Import\",\n            \"text\":\"Tools for bringing data into Excel from External Sources\",\n            \"tools\":[\n                {\n                    \"name\":\"Alpha Vantage\",\n                    \"text\":\"Import financial data from Alpha Vantage.  Requires a free account.\",\n                    \"gist_id\":\"470a7e6842e743b6a3d5e656e0dc76fc\"\n                },\n                {\n                    \"name\":\"data.world\",\n                    \"text\":\"Import data from the popular data sharaing serice, <a href=\\\"https://data.world/\\\">data.world</a>.  Requires an account, but accounts are free\",\n                    \"gist_id\":\"be077bce5ae6208da713d0686dcced28\"\n                },\n                {\n                    \"name\":\"Airtable\",\n                    \"text\":\"Import data from airtable.com\",\n                    \"gist_id\":\"1b47a857cefebe4d4256835d7a7f5c5d\"\n                }\n    \n            ]\n        }\n        \n\n    ]\n}"
+    },
+    "style.css": {
+      "filename": "style.css",
+      "type": "text/css",
+      "language": "CSS",
+      "raw_url": "https://gist.githubusercontent.com/jade-addin/0ad9cb51c9c7cdd79500a8e51ee85a18/raw/c2fff19496a86649f9eb6d8669d69fcc3f5cba58/style.css",
+      "size": 509,
+      "truncated": false,
+      "content": ".tool-group{\n    background-color: rgb(1, 93, 43);\n    font-weight: bold;\n    color: white;\n}\n.section{\n    cursor:pointer; \n    text-align: left;\n    background-color: #aaa;\n    font-weight: bold;\n}\n.drop{\n    text-align:right;\n    padding-right: .5rem;\n}\n\n.head{\n    padding-left: .5rem;\n}\n\n.label{\n    cursor:pointer; /*labels should be clickable to show thier associated note in the next row*/\n}\n\n.note td{\n    background-color: white; \n    padding: 0 .5rem .3rem .5rem\n}\n\n.clickable{\n    cursor:pointer\n}"
+    }
+  },
+  "public": true,
+  "created_at": "2022-05-02T14:49:39Z",
+  "updated_at": "2022-05-27T14:55:05Z",
+  "description": "JET: Tools of general utility directly accessible in JADE",
+  "comments": 0,
+  "user": null,
+  "comments_url": "https://api.github.com/gists/0ad9cb51c9c7cdd79500a8e51ee85a18/comments",
+  "owner": {
+    "login": "jade-addin",
+    "id": 97227368,
+    "node_id": "U_kgDOBcuSaA",
+    "avatar_url": "https://avatars.githubusercontent.com/u/97227368?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/jade-addin",
+    "html_url": "https://github.com/jade-addin",
+    "followers_url": "https://api.github.com/users/jade-addin/followers",
+    "following_url": "https://api.github.com/users/jade-addin/following{/other_user}",
+    "gists_url": "https://api.github.com/users/jade-addin/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/jade-addin/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/jade-addin/subscriptions",
+    "organizations_url": "https://api.github.com/users/jade-addin/orgs",
+    "repos_url": "https://api.github.com/users/jade-addin/repos",
+    "events_url": "https://api.github.com/users/jade-addin/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/jade-addin/received_events",
+    "type": "User",
+    "site_admin": false
+  },
+  "forks": [
+
+  ],
+  "history": [
+    {
+      "user": {
+        "login": "theGove",
+        "id": 24496385,
+        "node_id": "MDQ6VXNlcjI0NDk2Mzg1",
+        "avatar_url": "https://avatars.githubusercontent.com/u/24496385?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/theGove",
+        "html_url": "https://github.com/theGove",
+        "followers_url": "https://api.github.com/users/theGove/followers",
+        "following_url": "https://api.github.com/users/theGove/following{/other_user}",
+        "gists_url": "https://api.github.com/users/theGove/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/theGove/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/theGove/subscriptions",
+        "organizations_url": "https://api.github.com/users/theGove/orgs",
+        "repos_url": "https://api.github.com/users/theGove/repos",
+        "events_url": "https://api.github.com/users/theGove/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/theGove/received_events",
+        "type": "User",
+        "site_admin": false
+      },
+      "version": "6af94eb211bf6b11d2c501123406cadc62d0a143",
+      "committed_at": "2022-05-27T14:55:03Z",
+      "change_status": {
+        "total": 96,
+        "additions": 96,
+        "deletions": 0
+      },
+      "url": "https://api.github.com/gists/0ad9cb51c9c7cdd79500a8e51ee85a18/6af94eb211bf6b11d2c501123406cadc62d0a143"
+    }
+  ],
+  "truncated": false
+}
