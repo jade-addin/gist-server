@@ -12,19 +12,19 @@
       "filename": "code.js",
       "type": "application/javascript",
       "language": "JavaScript",
-      "raw_url": "https://gist.githubusercontent.com/jade-addin/be077bce5ae6208da713d0686dcced28/raw/eb332e73e104f42e24bf924682e60c68890855bc/code.js",
-      "size": 2959,
+      "raw_url": "https://gist.githubusercontent.com/jade-addin/be077bce5ae6208da713d0686dcced28/raw/8e7e5079b30565ad1c1e129e2d393d18b97bbf51/code.js",
+      "size": 4951,
       "truncated": false,
-      "content": "//data.world\nasync function auto_exec(){\n  // set the tool css\n  Jade.set_css(gist_files('style.css'),\"naive-bayes\")\n  // place the tool html \n  tag(\"tools-body\").innerHTML=gist_files('tool.html')\n  // fill in values from last tool use\n  jade_modules.jet_engine.restore_html_values()\n}\n\nfunction save_inputs(){\n  jade_modules.jet_engine.save_html_values([\"token\",\"owner\",\"dataset\",\"sheet-name\",\"sql\"])\n}\n\nfunction dw_credentials(){\n  window.open(\"https://data.world/settings/advanced\")\n}\n\nasync function import_data(){\n  if(!tag(\"sql\").value && !tag(\"sheet-name\").value){\n    alert(\"You must specify either a Data Sheet or an SQL statement.\")\n    return\n  }\n\n  let sql=tag(\"sql\").value\n  if(!sql){\n    sql = \"SELECT * FROM \" + tag(\"sheet-name\").value\n  }\n\n  save_inputs()\n  \n  const url=`https://api.data.world/v0/sql/${tag(\"owner\").value}/${tag(\"dataset\").value}`\n  const options={ \n    headers: { \n      'Content-Type' : 'application/json',  \n      'Authorization': 'Bearer ' + tag(\"token\").value,\n    },\n    'method' : 'POST',\n    'body'   : JSON.stringify({\n      \"query\": sql,\n      \"includeTableSchema\": true,\n      \"queryRunToken\": uuid()\n    })\n  }\n    jade.hide_element(\"sql-error\")\n    const response = await fetch(url,options)\n    if(response.status===400){\n      const data=await response.text()\n      tag(\"sql-error\").innerHTML=data\n      jade.show_element(\"sql-error\")\n      return\n    }\n\n    console.log(\"response\",response) \n    const data = await response.json()\n    \n    console.log(data) \n    \n    const columns=[]\n    const rows=[]\n    for(let x=0; x<data[0].fields.length; x++){\n      columns.push(data[0].fields[x].name)\n    }\n    rows.push(columns)\n    for(let x=1; x<data.length; x++){\n      const row=[]\n      for(const column of columns){\n        row.push(data[x][column])\n      }    \n      rows.push(row)\n    }\n    \n    //console.log(rows)\n    await array_to_table(tag(\"sheet-name\").value,rows,1,1)\n}\n\n\nasync function array_to_table(sheet_name, range_data, start_row, start_col){\n  await Excel.run(async function(excel){\n    if(sheet_name){\n      var sheet = excel.workbook.worksheets.getItemOrNullObject(sheet_name); \n    }else{\n      var sheet = excel.workbook.worksheets.add(); \n    }\n    await excel.sync()\n    \n    if (sheet.isNullObject) { \n      sheet = excel.workbook.worksheets.add(sheet_name)\n    }else{\n      sheet.getUsedRange().clear()\n    }\n    await excel.sync()\n    \n    sheet.activate()\n    const range=sheet.getRangeByIndexes(start_row-1,start_col-1,range_data.length, range_data[0].length)\n    range.values=range_data\n    range.format.autofitColumns()\n    sheet.tables.add(range, true /*hasHeaders*/);\n    await excel.sync()\n  })\n  \n}\n\nfunction uuid() {\n  var u='',m='xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx',i=0,rb=Math.random()*0xffffffff|0;\n  while(i++<36) {\n      var c=m[i-1],r=rb&0xf,v=c=='x'?r:(r&0x3|0x8);\n      u+=(c=='-'||c=='4')?c:v.toString(16);rb=i%8==0?Math.random()*0xffffffff|0:rb>>4\n  }\n  return u\n}"
+      "content": "//data.world\nasync function auto_exec(){\n  // set the tool css\n  Jade.set_css(gist_files('style.css'),\"naive-bayes\")\n  // place the tool html \n  tag(\"tools-body\").innerHTML=gist_files('tool.html')\n  // fill in values from last tool use\n  jade_modules.jet_engine.restore_html_values()\n}\n\nfunction save_inputs(){\n  jade_modules.jet_engine.save_html_values([\"token\",\"owner\",\"dataset\",\"sheet-name\",\"sql\"])\n}\n\nfunction dw_credentials(){\n  window.open(\"https://data.world/settings/advanced\")\n}\n\nasync function import_data(){\n  if(!tag(\"sql\").value && !tag(\"sheet-name\").value){\n    alert(\"You must specify either a Data Sheet or an SQL statement.\")\n    return\n  }\n\n  let sql=tag(\"sql\").value\n  if(!sql){\n    sql = \"SELECT * FROM \" + tag(\"sheet-name\").value\n  }\n\n  save_inputs()\n  \n  const url=`https://api.data.world/v0/sql/${tag(\"owner\").value}/${tag(\"dataset\").value}`\n  const options={ \n    headers: { \n      'Content-Type' : 'application/json',  \n      'Authorization': 'Bearer ' + tag(\"token\").value,\n    },\n    'method' : 'POST',\n    'body'   : JSON.stringify({\n      \"query\": sql,\n      \"includeTableSchema\": true,\n      \"queryRunToken\": uuid()\n    })\n  }\n    jade.hide_element(\"sql-error\")\n    const response = await fetch(url,options)\n    if(response.status===400){\n      const data=await response.text()\n      tag(\"sql-error\").innerHTML=data\n      jade.show_element(\"sql-error\")\n      return\n    }\n\n   //console.log(\"response\",response) \n    const data = await response.json()\n    \n   //console.log(data) \n    \n    const columns=[]\n    const rows=[]\n    for(let x=0; x<data[0].fields.length; x++){\n      columns.push(data[0].fields[x].name)\n    }\n    rows.push(columns)\n    for(let x=1; x<data.length; x++){\n      const row=[]\n      for(const column of columns){\n        row.push(data[x][column])\n      }    \n      rows.push(row)\n    }\n    \n    //console.log(rows)\n    \n    await array_to_table(tag(\"sheet-name\").value,rows,1,1,data[0])\n}\n\n\nasync function array_to_table(sheet_name, range_data, start_row, start_col, schema){\n  await Excel.run(async function(excel){\n    if(sheet_name){\n      var sheet = excel.workbook.worksheets.getItemOrNullObject(sheet_name); \n    }else{\n      var sheet = excel.workbook.worksheets.add(); \n    }\n    await excel.sync()\n    \n    if (sheet.isNullObject) { \n      sheet = excel.workbook.worksheets.add(sheet_name)\n    }else{\n      sheet.getUsedRange().clear()\n    }\n    await excel.sync()\n    \n    sheet.activate()\n    if(schema){\n     //console.log(\"in schema\", schema)\n      for(let x=0;x<schema.fields.length;x++){\n        const field = schema.fields[x]\n        switch(field.type){\n          case \"string\":\n            sheet.getRangeByIndexes(start_row,start_col+x-1,range_data.length-1,1).numberFormat=\"@\"\n            break\n          case \"date\":\n            sheet.getRangeByIndexes(start_row,start_col+x-1,range_data.length-1,1).numberFormat=\"yyyy-mm-dd\"\n            break\n          case \"integer\":\n            sheet.getRangeByIndexes(start_row,start_col+x-1,range_data.length-1,1).numberFormat=\"0\"\n            break\n          case \"number\":\n            sheet.getRangeByIndexes(start_row,start_col+x-1,range_data.length-1,1).numberFormat=\"General;-General\"\n            break\n          default:  \n        }\n\n      }\n    }\n    const range=sheet.getRangeByIndexes(start_row-1,start_col-1,range_data.length, range_data[0].length)\n    range.values=range_data\n    range.format.autofitColumns()\n    const the_table = sheet.tables.add(range, true /*hasHeaders*/);\n    if(sheet_name){\n      let new_name = await get_table_name(sheet_name)\n      new_name=new_name.split(\" \").join(\"_\")\n      console.log(new_name)\n      the_table.name=new_name\n    }\n\n\n    await excel.sync()\n  })\n  \n}\n\nasync function get_table_name(requested_name){\n  const table_names = await get_table_names()\n  if(table_names.includes(requested_name.toLowerCase())){\n    // tablename already exists. check for numeric suffix\n    let numeric_suffix=1\n    while(table_names.includes(requested_name.toLowerCase()+\"_\"+numeric_suffix)){\n      numeric_suffix++\n    }\n    return requested_name + \"_\" + numeric_suffix\n  }else{\n    // there is no conflict.  use requested name\n    return requested_name\n  }\n}\n\nasync function get_table_names(lowercase=true){\n  const table_names = []\n  await Excel.run(async function(excel) {\n    const table_objects = excel.workbook.tables;\n    table_objects.load('items')\n    await excel.sync()\n    for(let x=0;x<table_objects.items.length;x++){\n      if(lowercase){\n        table_names.push(table_objects.items[x].name.toLowerCase())\n      }else{\n        table_names.push(table_objects.items[x].name)\n      }\n    }\n  })\n  return table_names\n}\n\n\nfunction uuid() {\n  var u='',m='xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx',i=0,rb=Math.random()*0xffffffff|0;\n  while(i++<36) {\n      var c=m[i-1],r=rb&0xf,v=c=='x'?r:(r&0x3|0x8);\n      u+=(c=='-'||c=='4')?c:v.toString(16);rb=i%8==0?Math.random()*0xffffffff|0:rb>>4\n  }\n  return u\n}"
     },
-    "junk.txt": {
-      "filename": "junk.txt",
-      "type": "text/plain",
-      "language": "Text",
-      "raw_url": "https://gist.githubusercontent.com/jade-addin/be077bce5ae6208da713d0686dcced28/raw/5e40c0877058c504203932e5136051cf3cd3519b/junk.txt",
-      "size": 4,
+    "manifest.json": {
+      "filename": "manifest.json",
+      "type": "application/json",
+      "language": "JSON",
+      "raw_url": "https://gist.githubusercontent.com/jade-addin/be077bce5ae6208da713d0686dcced28/raw/bba61abbf556210900388a12c2f71021577ae07b/manifest.json",
+      "size": 41,
       "truncated": false,
-      "content": "asdf"
+      "content": "[\n    \"code.js\",\"tool.html\",\"style.css\"\n]"
     },
     "style.css": {
       "filename": "style.css",
@@ -47,7 +47,7 @@
   },
   "public": true,
   "created_at": "2022-05-02T14:36:00Z",
-  "updated_at": "2022-05-09T23:43:37Z",
+  "updated_at": "2022-05-28T15:39:28Z",
   "description": "JET: data.world import to worksheet",
   "comments": 0,
   "user": null,
@@ -97,14 +97,14 @@
         "type": "User",
         "site_admin": false
       },
-      "version": "2e94bd10ab404e8c8081e92be230432645765932",
-      "committed_at": "2022-05-09T23:43:36Z",
+      "version": "8b5ce6b5b443cd2b7002069f0b960c0a8e02cd42",
+      "committed_at": "2022-05-28T15:39:31Z",
       "change_status": {
-        "total": 191,
-        "additions": 191,
+        "total": 257,
+        "additions": 257,
         "deletions": 0
       },
-      "url": "https://api.github.com/gists/be077bce5ae6208da713d0686dcced28/2e94bd10ab404e8c8081e92be230432645765932"
+      "url": "https://api.github.com/gists/be077bce5ae6208da713d0686dcced28/8b5ce6b5b443cd2b7002069f0b960c0a8e02cd42"
     }
   ],
   "truncated": false
