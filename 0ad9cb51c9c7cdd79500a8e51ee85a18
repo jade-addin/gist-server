@@ -21,10 +21,10 @@
       "filename": "jet_tools.json",
       "type": "application/json",
       "language": "JSON",
-      "raw_url": "https://gist.githubusercontent.com/jade-addin/0ad9cb51c9c7cdd79500a8e51ee85a18/raw/03c3a1530831f20189e4ba69f783aaa8fc955917/jet_tools.json",
-      "size": 2081,
+      "raw_url": "https://gist.githubusercontent.com/jade-addin/0ad9cb51c9c7cdd79500a8e51ee85a18/raw/4afd46098527bcac8e009d35d0aa10f392912036/jet_tools.json",
+      "size": 2289,
       "truncated": false,
-      "content": "{\n    \"groups\":[\n        {   \"name\":\"Introduction\",\n            \"text\":\"The tools available here extend the functionality of Excel.\"\n        },\n        {   \"name\":\"Analytics\",\n            \"text\":\"Perform statistical analyses on your data\",\n            \"tools\":[\n            {\n                \"name\":\"Naive Bayes Analysis\",\n                \"text\":\"Compute a Naive Bayes Analysis for classification\",\n                \"gist_id\":\"43fb536747da1d8111b9e7b72c13022e\"\n            },\n            {\n                \"name\":\"Logistic Regression\",\n                \"text\":\"Compute a logistic regression\",\n                \"gist_id\":\"9382a0ae7967eef62acf20f0f31a8c31\"\n            }\n            ]\n        },\n        {   \"name\":\"What-If Analysis\",\n            \"text\":\"What-If analysis allows you to examine how a spreadsheet model appear under different conditions\",\n            \"tools\":[\n                {\n                    \"name\":\"Goal Seek\",\n                    \"text\":\"Adjust a cell to try to find a particular result for a formula.\",\n                    \"gist_id\":\"6ea1e7a39f57c481812c3943103acc4b\"\n                }\n            ]\n        \n        },\n        {   \"name\":\"Data Import\",\n            \"text\":\"Tools for bringing data into Excel from External Sources\",\n            \"tools\":[\n                {\n                    \"name\":\"Alpha Vantage\",\n                    \"text\":\"Import financial data from Alpha Vantage.  Requires a free account.\",\n                    \"gist_id\":\"470a7e6842e743b6a3d5e656e0dc76fc\"\n                },\n                {\n                    \"name\":\"data.world\",\n                    \"text\":\"Import data from the popular data sharaing serice, <a href=\\\"https://data.world/\\\">data.world</a>.  Requires an account, but accounts are free\",\n                    \"gist_id\":\"be077bce5ae6208da713d0686dcced28\"\n                },\n                {\n                    \"name\":\"Airtable\",\n                    \"text\":\"Import data from airtable.com\",\n                    \"gist_id\":\"1b47a857cefebe4d4256835d7a7f5c5d\"\n                }\n    \n            ]\n        }\n        \n\n    ]\n}"
+      "content": "{\n    \"groups\":[\n        {   \"name\":\"Introduction\",\n            \"text\":\"The tools available here extend the functionality of Excel.\"\n        },\n        {   \"name\":\"Analytics\",\n            \"text\":\"Perform statistical analyses on your data\",\n            \"tools\":[\n            {\n                \"name\":\"Naive Bayes Analysis\",\n                \"text\":\"Compute a Naive Bayes Analysis for classification\",\n                \"gist_id\":\"43fb536747da1d8111b9e7b72c13022e\"\n            },\n            {\n                \"name\":\"Logistic Regression\",\n                \"text\":\"Compute a logistic regression\",\n                \"gist_id\":\"9382a0ae7967eef62acf20f0f31a8c31\"\n            }\n            ]\n        },\n        {   \"name\":\"What-If Analysis\",\n            \"text\":\"What-If analysis allows you to examine how a spreadsheet model appear under different conditions\",\n            \"tools\":[\n                {\n                    \"name\":\"Goal Seek\",\n                    \"text\":\"Adjust a cell to try to find a particular result for a formula.\",\n                    \"gist_id\":\"6ea1e7a39f57c481812c3943103acc4b\"\n                }\n            ]\n        \n        },\n        {   \"name\":\"Data Import\",\n            \"text\":\"Tools for bringing data into Excel from External Sources\",\n            \"tools\":[\n                {\n                    \"name\":\"Alpha Vantage\",\n                    \"text\":\"Import financial data from Alpha Vantage.  Requires a free account.\",\n                    \"gist_id\":\"470a7e6842e743b6a3d5e656e0dc76fc\"\n                },\n                {\n                    \"name\":\"data.world\",\n                    \"text\":\"Import data from the popular data sharaing serice, <a href=\\\"https://data.world/\\\">data.world</a>.  Requires an account, but accounts are free\",\n                    \"gist_id\":\"be077bce5ae6208da713d0686dcced28\"\n                },\n                {\n                    \"name\":\"Airtable\",\n                    \"text\":\"Import data from airtable.com\",\n                    \"gist_id\":\"1b47a857cefebe4d4256835d7a7f5c5d\"\n                },\n                {\n                    \"name\":\"Local Query\",\n                    \"text\":\"Query data in Excel with SQL\",\n                    \"gist_id\":\"3c89ef8bd072d31d46fca6e7b062acd2\"\n                }\n    \n    \n            ]\n        }\n        \n\n    ]\n}"
     },
     "style.css": {
       "filename": "style.css",
@@ -38,7 +38,7 @@
   },
   "public": true,
   "created_at": "2022-05-02T14:49:39Z",
-  "updated_at": "2022-05-27T14:55:05Z",
+  "updated_at": "2022-05-28T15:06:29Z",
   "description": "JET: Tools of general utility directly accessible in JADE",
   "comments": 0,
   "user": null,
@@ -88,14 +88,14 @@
         "type": "User",
         "site_admin": false
       },
-      "version": "6af94eb211bf6b11d2c501123406cadc62d0a143",
-      "committed_at": "2022-05-27T14:55:03Z",
+      "version": "8f8733f4b136d72d26ee8355fb5c3ce91e15d321",
+      "committed_at": "2022-05-28T15:06:32Z",
       "change_status": {
-        "total": 96,
-        "additions": 96,
+        "total": 102,
+        "additions": 102,
         "deletions": 0
       },
-      "url": "https://api.github.com/gists/0ad9cb51c9c7cdd79500a8e51ee85a18/6af94eb211bf6b11d2c501123406cadc62d0a143"
+      "url": "https://api.github.com/gists/0ad9cb51c9c7cdd79500a8e51ee85a18/8f8733f4b136d72d26ee8355fb5c3ce91e15d321"
     }
   ],
   "truncated": false
