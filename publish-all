@@ -1,0 +1,9 @@
+./publish ../gists/jade_tools/tools/data.world
+./publish ../gists/jade_tools/tools/alphavantage
+./publish ../gists/jade_tools/tools/data-files
+./publish ../gists/jade_tools/tools/logistic_regression/javascript
+./publish ../gists/jade_tools/tools/naive_bayes
+./publish ../gists/jade_tools/tools/airtable
+./publish ../gists/jade_tools/tools/local_query
+./publish ../gists/jade_tools/engine
+./publish ../gists/jade_tools/collections/jet
