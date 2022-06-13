@@ -47,7 +47,7 @@
   },
   "public": true,
   "created_at": "2022-05-06T11:55:30Z",
-  "updated_at": "2022-06-13T21:30:47Z",
+  "updated_at": "2022-06-13T21:42:00Z",
   "description": "JET: Logistic Regression tool for the JADE Excel Add-in (using javascript)",
   "comments": 0,
   "user": null,
@@ -97,14 +97,14 @@
         "type": "User",
         "site_admin": false
       },
-      "version": "e1c83f1e1a1db362fd04be9c19fcb59c7c9b3491",
-      "committed_at": "2022-06-13T21:30:57Z",
+      "version": "dc19cf2d85eef2ee20122e897e0865eaf719467e",
+      "committed_at": "2022-06-13T21:42:10Z",
       "change_status": {
         "total": 1038,
         "additions": 1038,
         "deletions": 0
       },
-      "url": "https://api.github.com/gists/9382a0ae7967eef62acf20f0f31a8c31/e1c83f1e1a1db362fd04be9c19fcb59c7c9b3491"
+      "url": "https://api.github.com/gists/9382a0ae7967eef62acf20f0f31a8c31/dc19cf2d85eef2ee20122e897e0865eaf719467e"
     }
   ],
   "truncated": false
