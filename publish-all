@@ -7,3 +7,4 @@
 ./publish ../gists/jade_tools/tools/local_query
 ./publish ../gists/jade_tools/engine
 ./publish ../gists/jade_tools/collections/jet
+./publish ../gists/jade_tools/tools/data_statement
