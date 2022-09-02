@@ -10,6 +10,7 @@ cd $1
 #cd $gist
 cd $(ls -d */|head -n 1)
 echo $PWD
+echo $PWD
 # squash the gist
 git checkout --orphan latest_branch
 git add -A
