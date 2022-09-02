@@ -3,6 +3,7 @@
 # ./publish ../jet/tools/data.world
 # must be run from the gist-server folder
 home=$PWD
+echo $1
 cd $1
 gist=(*)
 echo "$gist"
