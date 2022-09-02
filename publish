@@ -5,9 +5,10 @@
 home=$PWD
 echo $1
 cd $1
-gist=(*)
-echo "$gist"
-cd $gist
+##gist=(*)
+#echo "$gist"
+#cd $gist
+cd $(ls -d */|head -n 1)
 echo $PWD
 # squash the gist
 git checkout --orphan latest_branch
