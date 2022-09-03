@@ -1,16 +1,24 @@
+#!/bin/bash
+
+
+
 # you pass in a path to a foler that ontains a single gist.  This will squash that gist and publish it to a gist server
 # example call:
 # ./publish ../jet/tools/data.world
 # must be run from the gist-server folder
+
+
+
 home=$PWD
 echo $1
 cd $1
-##gist=(*)
-#echo "$gist"
-#cd $gist
-cd $(ls -d */|head -n 1)
 echo $PWD
+
+gist=(*)
+echo "$gist"
+cd $gist
 echo $PWD
+
 # squash the gist
 git checkout --orphan latest_branch
 git add -A
@@ -26,4 +34,3 @@ curl -o $gist https://api.github.com/gists/$gist?$RANDOM$RANDOM
 git add $gist
 git commit -m "publishing gist"
 git push
-
